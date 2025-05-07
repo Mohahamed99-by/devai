@@ -14,9 +14,78 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [ClientResponseController::class, 'showForm']);
+// Routes publiques
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('/client-response/form', [ClientResponseController::class, 'showFormModal'])->name('client-response.form');
 Route::post('/client-response', [ClientResponseController::class, 'store']);
 Route::get('/client-response/{clientResponse}', [ClientResponseController::class, 'show']);
-
-// Route pour la génération de PDF
 Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController::class, 'generatePdf']);
+
+// Routes d'authentification
+Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
+Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
+// Routes protégées par authentification
+Route::middleware(['auth'])->group(function () {
+    // Routes communes à tous les utilisateurs authentifiés
+    Route::get('/technical-sheets', [App\Http\Controllers\TechnicalSheetController::class, 'index'])
+        ->name('technical-sheets.index');
+
+    // Accès aux fiches techniques de l'utilisateur connecté
+    Route::get('/client-response/my', [App\Http\Controllers\ClientResponseController::class, 'myResponses'])
+        ->name('client-response.my');
+
+    // Routes pour les notifications
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::post('/notifications/{id}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.read-all');
+    Route::get('/notifications/unread-count', [App\Http\Controllers\NotificationController::class, 'getUnreadCount'])
+        ->name('notifications.unread-count');
+    Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'getLatest'])
+        ->name('notifications.latest');
+
+    // Routes pour les clients (utilisateurs standard)
+    Route::middleware(['role:client'])->group(function () {
+
+        // Suppression des fiches techniques de l'utilisateur connecté uniquement
+        Route::delete('/technical-sheets/{clientResponse}', [App\Http\Controllers\TechnicalSheetController::class, 'destroy'])
+            ->middleware('permission:delete_own_technical_sheets')
+            ->name('technical-sheets.destroy')
+            ->where('clientResponse', function ($value, $route, $request) {
+                return auth()->user()->clientResponses()->where('id', $value)->exists();
+            });
+    });
+
+    // Routes pour les administrateurs
+    Route::middleware(['role:admin'])->group(function () {
+        // Tableau de bord administrateur
+        Route::get('/admin/dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])
+            ->name('admin.dashboard');
+
+        // Validation des fiches techniques
+        Route::patch('/technical-sheets/{clientResponse}/validate', [App\Http\Controllers\TechnicalSheetController::class, 'validateSheet'])
+            ->middleware('permission:validate_technical_sheets')
+            ->name('technical-sheets.validate');
+
+        // Suppression de n'importe quelle fiche technique
+        Route::delete('/technical-sheets/admin/{clientResponse}', [App\Http\Controllers\TechnicalSheetController::class, 'adminDestroy'])
+            ->middleware('permission:delete_technical_sheets')
+            ->name('technical-sheets.admin.destroy');
+
+        // Gestion des utilisateurs
+        Route::middleware('permission:manage_users')->group(function () {
+            Route::get('/users', [App\Http\Controllers\UserController::class, 'index'])->name('users.index');
+            Route::get('/users/create', [App\Http\Controllers\UserController::class, 'create'])->name('users.create');
+            Route::post('/users', [App\Http\Controllers\UserController::class, 'store'])->name('users.store');
+            Route::get('/users/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('users.edit');
+            Route::put('/users/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('users.update');
+            Route::delete('/users/{user}', [App\Http\Controllers\UserController::class, 'destroy'])->name('users.destroy');
+        });
+    });
+});

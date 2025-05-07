@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ClientResponse extends Model
 {
     protected $fillable = [
+        'user_id',
         'project_type',
         'project_description',
         'similar_applications',
@@ -27,7 +28,8 @@ class ClientResponse extends Model
         'ai_estimated_duration',
         'ai_analysis_summary',
         'ai_complexity_factors',
-        'ai_cost_estimate'
+        'ai_cost_estimate',
+        'status'
     ];
 
     protected $casts = [
@@ -43,4 +45,28 @@ class ClientResponse extends Model
         'ai_complexity_factors' => 'array',
         'ai_cost_estimate' => 'decimal:2'
     ];
+
+    /**
+     * Get the user that owns the client response
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Check if the client response is a draft
+     */
+    public function isDraft()
+    {
+        return $this->status === 'draft';
+    }
+
+    /**
+     * Check if the client response is validated
+     */
+    public function isValidated()
+    {
+        return $this->status === 'validated';
+    }
 }
