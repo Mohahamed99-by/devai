@@ -84,7 +84,7 @@
         
         <div class="container mx-auto px-4 py-24 relative z-10">
             <div class="max-w-5xl mx-auto text-center">
-                <div class="inline-block mb-4 px-6 py-2 bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-full text-sm font-medium">
+                <div class="inline-block mb-4 px-6 py-2 bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-full text-black text-sm font-medium">
                     Propulsé par l'intelligence artificielle
                 </div>
                 <h1 class="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">

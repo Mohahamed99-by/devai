@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
 Route::get('/client-response/form', [ClientResponseController::class, 'showFormModal'])->name('client-response.form');
 Route::post('/client-response', [ClientResponseController::class, 'store']);
-Route::get('/client-response/{clientResponse}', [ClientResponseController::class, 'show']);
+Route::get('/client-response/confirmation/{clientResponse}', [ClientResponseController::class, 'showConfirmation'])->name('client-response.confirmation');
 Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController::class, 'generatePdf']);
 
 // Routes d'authentification
@@ -35,8 +35,12 @@ Route::middleware(['auth'])->group(function () {
         ->name('technical-sheets.index');
 
     // Accès aux fiches techniques de l'utilisateur connecté
-    Route::get('/client-response/my', [App\Http\Controllers\ClientResponseController::class, 'myResponses'])
+    Route::get('/my-technical-sheets', [App\Http\Controllers\ClientResponseController::class, 'myResponses'])
         ->name('client-response.my');
+
+    // Association d'une réponse temporaire à un utilisateur
+    Route::post('/client-response/associate', [App\Http\Controllers\ClientResponseController::class, 'associateTemporaryResponse'])
+        ->name('client-response.associate');
 
     // Routes pour les notifications
     Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])
@@ -49,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
         ->name('notifications.unread-count');
     Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'getLatest'])
         ->name('notifications.latest');
+
+    // Route pour afficher une fiche technique spécifique (doit être après les routes spécifiques)
+    Route::get('/client-response/{clientResponse}', [ClientResponseController::class, 'show'])->name('client-response.show');
 
     // Routes pour les clients (utilisateurs standard)
     Route::middleware(['role:client'])->group(function () {

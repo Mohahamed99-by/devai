@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class ClientResponseController extends Controller
 {
@@ -70,32 +72,49 @@ class ClientResponseController extends Controller
             // Convert arrays to JSON for storage
             $dataToSave = $validatedData;
 
+            // Générer un identifiant unique pour les utilisateurs non-authentifiés
+            $tempIdentifier = null;
+
             // Add user_id if user is authenticated
             if (Auth::check()) {
                 $dataToSave['user_id'] = Auth::id();
+                $dataToSave['status'] = 'draft';
+            } else {
+                // Pour les utilisateurs non-authentifiés, générer un identifiant temporaire
+                $tempIdentifier = Str::uuid()->toString();
+                $dataToSave['status'] = 'temporary';
+
+                // Stocker l'identifiant temporaire en session
+                Session::put('temp_client_response_id', $tempIdentifier);
             }
 
             // First save the client response
             $clientResponse = ClientResponse::create($dataToSave);
 
-            // Notifier l'utilisateur de la création de sa fiche
+            // Si c'est un utilisateur non-authentifié, stocker l'identifiant temporaire
+            if (!Auth::check() && $tempIdentifier) {
+                $clientResponse->temp_identifier = $tempIdentifier;
+                $clientResponse->save();
+            }
+
+            // Notifier l'utilisateur de la création de sa fiche (seulement si authentifié)
             if (Auth::check()) {
                 Auth::user()->notify(new TechnicalSheetStatusChanged(
                     $clientResponse,
                     'draft',
                     'Votre fiche technique a été créée avec succès.'
                 ));
-            }
 
-            // Notifier les administrateurs de la nouvelle fiche
-            $adminRole = Role::where('slug', 'admin')->first();
-            if ($adminRole) {
-                $admins = User::where('role_id', $adminRole->id)->get();
-                Notification::send($admins, new TechnicalSheetStatusChanged(
-                    $clientResponse,
-                    'draft',
-                    'Une nouvelle fiche technique a été créée et nécessite votre validation.'
-                ));
+                // Notifier les administrateurs de la nouvelle fiche
+                $adminRole = Role::where('slug', 'admin')->first();
+                if ($adminRole) {
+                    $admins = User::where('role_id', $adminRole->id)->get();
+                    Notification::send($admins, new TechnicalSheetStatusChanged(
+                        $clientResponse,
+                        'draft',
+                        'Une nouvelle fiche technique a été créée et nécessite votre validation.'
+                    ));
+                }
             }
 
             // Get AI analysis
@@ -119,12 +138,24 @@ class ClientResponseController extends Controller
                 'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
             ]);
 
-            return response()->json([
+            // Préparer la réponse
+            $responseData = [
                 'status' => 'success',
                 'message' => 'Project requirements analyzed successfully',
                 'data' => $clientResponse,
                 'id' => $clientResponse->id
-            ]);
+            ];
+
+            // Ajouter des informations pour les utilisateurs non-authentifiés
+            if (!Auth::check()) {
+                $responseData['requires_login'] = true;
+                $responseData['temp_identifier'] = $tempIdentifier;
+                $responseData['redirect_url'] = route('client-response.confirmation', $clientResponse->id);
+            } else {
+                $responseData['redirect_url'] = route('client-response.show', $clientResponse->id);
+            }
+
+            return response()->json($responseData);
 
         } catch (\Exception $e) {
             Log::error('Client Response Error: ' . $e->getMessage(), [
@@ -154,6 +185,17 @@ class ClientResponseController extends Controller
             return view('client-response.show', compact('clientResponse'));
         }
 
+        // Vérifier si c'est une fiche temporaire et si l'utilisateur a l'identifiant temporaire en session
+        $tempIdentifier = Session::get('temp_client_response_id');
+        if (!Auth::check() && $clientResponse->status === 'temporary' &&
+            $tempIdentifier && $clientResponse->temp_identifier === $tempIdentifier) {
+            // L'utilisateur non-authentifié peut voir sa propre fiche temporaire
+            return view('client-response.show', [
+                'clientResponse' => $clientResponse,
+                'requiresRegistration' => true
+            ]);
+        }
+
         // Si l'utilisateur n'est pas connecté ou n'est pas autorisé
         if (Auth::check()) {
             return redirect()->route('technical-sheets.index')
@@ -180,5 +222,99 @@ class ClientResponseController extends Controller
         }
 
         return view('client-response.my', compact('clientResponses'));
+    }
+
+    /**
+     * Afficher la page de confirmation après soumission du formulaire
+     */
+    public function showConfirmation(ClientResponse $clientResponse)
+    {
+        // Vérifier si c'est une fiche temporaire et si l'utilisateur a l'identifiant temporaire en session
+        $tempIdentifier = Session::get('temp_client_response_id');
+
+        if (!Auth::check() && $clientResponse->status === 'temporary' &&
+            $tempIdentifier && $clientResponse->temp_identifier === $tempIdentifier) {
+            // L'utilisateur non-authentifié peut voir sa page de confirmation
+            return view('client-response.confirmation', [
+                'clientResponseId' => $clientResponse->id
+            ]);
+        }
+
+        // Si l'utilisateur est authentifié, rediriger vers la page des fiches techniques
+        if (Auth::check()) {
+            return redirect()->route('client-response.my')
+                ->with('success', 'Votre fiche technique est disponible dans votre espace personnel.');
+        }
+
+        // Si l'utilisateur n'est pas authentifié et n'a pas l'identifiant temporaire, rediriger vers la fiche
+        return redirect()->route('client-response.show', $clientResponse->id);
+    }
+
+    /**
+     * Associer une réponse temporaire à un utilisateur après inscription
+     */
+    public function associateTemporaryResponse(Request $request)
+    {
+        // Vérifier si l'utilisateur est authentifié
+        if (!Auth::check()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Vous devez être connecté pour associer une fiche technique.'
+            ], 401);
+        }
+
+        // Récupérer l'identifiant temporaire depuis la session
+        $tempIdentifier = Session::get('temp_client_response_id');
+
+        if (!$tempIdentifier) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Aucune fiche technique temporaire trouvée.'
+            ], 404);
+        }
+
+        // Trouver la réponse temporaire
+        $clientResponse = ClientResponse::where('temp_identifier', $tempIdentifier)
+            ->where('status', 'temporary')
+            ->first();
+
+        if (!$clientResponse) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Fiche technique temporaire introuvable.'
+            ], 404);
+        }
+
+        // Associer la réponse à l'utilisateur
+        $clientResponse->user_id = Auth::id();
+        $clientResponse->status = 'draft';
+        $clientResponse->save();
+
+        // Notifier l'utilisateur
+        Auth::user()->notify(new TechnicalSheetStatusChanged(
+            $clientResponse,
+            'draft',
+            'Votre fiche technique a été associée à votre compte avec succès.'
+        ));
+
+        // Notifier les administrateurs
+        $adminRole = Role::where('slug', 'admin')->first();
+        if ($adminRole) {
+            $admins = User::where('role_id', $adminRole->id)->get();
+            Notification::send($admins, new TechnicalSheetStatusChanged(
+                $clientResponse,
+                'draft',
+                'Une nouvelle fiche technique a été associée à un utilisateur et nécessite votre validation.'
+            ));
+        }
+
+        // Supprimer l'identifiant temporaire de la session
+        Session::forget('temp_client_response_id');
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Fiche technique associée avec succès.',
+            'data' => $clientResponse
+        ]);
     }
 }

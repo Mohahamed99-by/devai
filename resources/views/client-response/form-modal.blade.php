@@ -609,8 +609,20 @@
 
                 fetchTimeout
                     .then(data => {
-                        // Rediriger vers la page de résultat
-                        window.location.href = '/client-response/' + data.id;
+                        // Vérifier si l'utilisateur doit s'inscrire
+                        if (data.requires_login) {
+                            // Stocker l'identifiant temporaire dans le localStorage pour plus de sécurité
+                            if (data.temp_identifier) {
+                                localStorage.setItem('temp_client_response_id', data.temp_identifier);
+                            }
+                        }
+                        // Rediriger vers l'URL fournie par le serveur
+                        if (data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                        } else {
+                            // Fallback au cas où l'URL de redirection n'est pas fournie
+                            window.location.href = '/client-response/' + data.id;
+                        }
                     })
                     .catch(error => {
                         console.error('Erreur:', error);

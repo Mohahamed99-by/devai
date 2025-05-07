@@ -1,35 +1,31 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Technical Specification - Project Analysis</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+
+@section('title', 'Fiche Technique - Analyse de Projet')
+
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <div class="mb-6">
             <a href="{{ url('/') }}" class="text-blue-500 hover:text-blue-700 flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                Back to Form
+                Retour au formulaire
             </a>
         </div>
 
         <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h1 class="text-3xl font-bold mb-2">Technical Specification</h1>
-            <p class="text-gray-600">AI-Generated Analysis for Your Project</p>
+            <h1 class="text-3xl font-bold mb-2">Fiche Technique</h1>
+            <p class="text-gray-600">Analyse générée par IA pour votre projet</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Original Requirements -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Project Requirements</h2>
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Exigences du Projet</h2>
 
                 <div class="space-y-5">
                     <div>
-                        <h3 class="font-semibold text-blue-700">Project Type</h3>
+                        <h3 class="font-semibold text-blue-700">Type de Projet</h3>
                         <p class="mt-1">{{ ucfirst(str_replace('_', ' ', $clientResponse->project_type)) }}</p>
                     </div>
 
@@ -40,13 +36,13 @@
 
                     @if(!empty($clientResponse->similar_applications))
                     <div>
-                        <h3 class="font-semibold text-blue-700">Similar Applications</h3>
+                        <h3 class="font-semibold text-blue-700">Applications Similaires</h3>
                         <p class="mt-1">{{ $clientResponse->similar_applications }}</p>
                     </div>
                     @endif
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Target Audience</h3>
+                        <h3 class="font-semibold text-blue-700">Public Cible</h3>
                         <ul class="list-disc list-inside mt-1">
                             @foreach($clientResponse->target_audience as $audience)
                                 <li>{{ ucfirst(str_replace('_', ' ', $audience)) }}</li>
@@ -56,7 +52,7 @@
 
                     @if(!empty($clientResponse->user_roles))
                     <div>
-                        <h3 class="font-semibold text-blue-700">User Roles</h3>
+                        <h3 class="font-semibold text-blue-700">Rôles Utilisateurs</h3>
                         <ul class="list-disc list-inside mt-1">
                             @foreach($clientResponse->user_roles as $role)
                                 <li>{{ ucfirst(str_replace('_', ' ', $role)) }}</li>
@@ -66,7 +62,7 @@
                     @endif
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Requested Features</h3>
+                        <h3 class="font-semibold text-blue-700">Fonctionnalités Demandées</h3>
                         <ul class="list-disc list-inside mt-1">
                             @foreach($clientResponse->key_features as $feature)
                                 <li>{{ ucfirst(str_replace('_', ' ', $feature)) }}</li>
@@ -76,31 +72,31 @@
 
                     @if(!empty($clientResponse->custom_features))
                     <div>
-                        <h3 class="font-semibold text-blue-700">Additional Features</h3>
+                        <h3 class="font-semibold text-blue-700">Fonctionnalités Supplémentaires</h3>
                         <p class="mt-1">{{ $clientResponse->custom_features }}</p>
                     </div>
                     @endif
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Budget Range</h3>
+                        <h3 class="font-semibold text-blue-700">Fourchette Budgétaire</h3>
                         <p class="mt-1">{{ $clientResponse->budget_range }}</p>
                     </div>
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Timeline</h3>
+                        <h3 class="font-semibold text-blue-700">Délai</h3>
                         <p class="mt-1">{{ $clientResponse->timeline }}</p>
                     </div>
 
                     @if(!empty($clientResponse->deadline))
                     <div>
-                        <h3 class="font-semibold text-blue-700">Specific Deadline</h3>
-                        <p class="mt-1">{{ $clientResponse->deadline->format('F j, Y') }}</p>
+                        <h3 class="font-semibold text-blue-700">Date Limite Spécifique</h3>
+                        <p class="mt-1">{{ $clientResponse->deadline->format('d/m/Y') }}</p>
                     </div>
                     @endif
 
                     @if(!empty($clientResponse->technical_requirements))
                     <div>
-                        <h3 class="font-semibold text-blue-700">Technical Requirements</h3>
+                        <h3 class="font-semibold text-blue-700">Exigences Techniques</h3>
                         <ul class="list-disc list-inside mt-1">
                             @foreach($clientResponse->technical_requirements as $req)
                                 <li>{{ ucfirst(str_replace('_', ' ', $req)) }}</li>
@@ -111,25 +107,25 @@
 
                     @if(!empty($clientResponse->external_apis))
                     <div>
-                        <h3 class="font-semibold text-blue-700">External API Integrations</h3>
+                        <h3 class="font-semibold text-blue-700">Intégrations API Externes</h3>
                         <p class="mt-1">{{ $clientResponse->external_apis }}</p>
                     </div>
                     @endif
 
                     @if(!empty($clientResponse->design_complexity))
                     <div>
-                        <h3 class="font-semibold text-blue-700">UI/UX Design Complexity</h3>
+                        <h3 class="font-semibold text-blue-700">Complexité du Design UI/UX</h3>
                         <p class="mt-1">{{ ucfirst($clientResponse->design_complexity) }}</p>
                     </div>
                     @endif
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Maintenance Requirements</h3>
-                        <p class="mt-1">{{ $clientResponse->needs_maintenance ? 'Yes' : 'No' }}</p>
+                        <h3 class="font-semibold text-blue-700">Besoins de Maintenance</h3>
+                        <p class="mt-1">{{ $clientResponse->needs_maintenance ? 'Oui' : 'Non' }}</p>
 
                         @if($clientResponse->needs_maintenance && !empty($clientResponse->maintenance_type))
                         <div class="mt-2">
-                            <h4 class="font-medium text-gray-700">Maintenance Type:</h4>
+                            <h4 class="font-medium text-gray-700">Type de Maintenance :</h4>
                             <ul class="list-disc list-inside ml-4">
                                 @foreach($clientResponse->maintenance_type as $type)
                                     <li>{{ ucfirst(str_replace('_', ' ', $type)) }}</li>
@@ -143,20 +139,20 @@
 
             <!-- AI Analysis -->
             <div class="bg-white rounded-lg shadow-md p-6">
-                <h2 class="text-xl font-bold mb-4 pb-2 border-b">AI Technical Analysis</h2>
+                <h2 class="text-xl font-bold mb-4 pb-2 border-b">Analyse Technique par IA</h2>
 
                 <div class="space-y-5">
                     <div>
-                        <h3 class="font-semibold text-blue-700">Project Summary</h3>
+                        <h3 class="font-semibold text-blue-700">Résumé du Projet</h3>
                         @if(!empty($clientResponse->ai_analysis_summary))
                             <p class="mt-1 text-gray-700 whitespace-pre-line">{{ $clientResponse->ai_analysis_summary }}</p>
                         @else
-                            <p class="mt-1 text-gray-500">No analysis summary available</p>
+                            <p class="mt-1 text-gray-500">Aucun résumé d'analyse disponible</p>
                         @endif
                     </div>
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Recommended Technologies</h3>
+                        <h3 class="font-semibold text-blue-700">Technologies Recommandées</h3>
                         @if(count($clientResponse->ai_suggested_technologies) > 0)
                             <ul class="mt-1 list-disc list-inside">
                                 @foreach($clientResponse->ai_suggested_technologies as $tech)
@@ -164,12 +160,12 @@
                                 @endforeach
                             </ul>
                         @else
-                            <p class="mt-1 text-gray-500">No technologies suggested</p>
+                            <p class="mt-1 text-gray-500">Aucune technologie suggérée</p>
                         @endif
                     </div>
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Recommended Features</h3>
+                        <h3 class="font-semibold text-blue-700">Fonctionnalités Recommandées</h3>
                         @if(count($clientResponse->ai_suggested_features) > 0)
                             <ul class="mt-1 list-disc list-inside">
                                 @foreach($clientResponse->ai_suggested_features as $feature)
@@ -177,12 +173,12 @@
                                 @endforeach
                             </ul>
                         @else
-                            <p class="mt-1 text-gray-500">No features suggested</p>
+                            <p class="mt-1 text-gray-500">Aucune fonctionnalité suggérée</p>
                         @endif
                     </div>
 
                     <div>
-                        <h3 class="font-semibold text-blue-700">Complexity Factors</h3>
+                        <h3 class="font-semibold text-blue-700">Facteurs de Complexité</h3>
                         @if(count($clientResponse->ai_complexity_factors) > 0)
                             <ul class="mt-1 list-disc list-inside">
                                 @foreach($clientResponse->ai_complexity_factors as $factor)
@@ -190,34 +186,59 @@
                                 @endforeach
                             </ul>
                         @else
-                            <p class="mt-1 text-gray-500">No complexity factors identified</p>
+                            <p class="mt-1 text-gray-500">Aucun facteur de complexité identifié</p>
                         @endif
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-4 border-t">
                         <div class="bg-blue-50 p-4 rounded-lg">
-                            <h3 class="font-semibold text-blue-700">Estimated Timeline</h3>
+                            <h3 class="font-semibold text-blue-700">Délai Estimé</h3>
                             <p class="mt-1 text-2xl font-bold">{{ $clientResponse->ai_estimated_duration }}</p>
                         </div>
 
                         <div class="bg-blue-50 p-4 rounded-lg">
-                            <h3 class="font-semibold text-blue-700">Estimated Budget</h3>
+                            <h3 class="font-semibold text-blue-700">Budget Estimé</h3>
                             <p class="mt-1 text-2xl font-bold">${{ number_format($clientResponse->ai_cost_estimate, 2) }}</p>
                         </div>
                     </div>
 
                     <div class="mt-8 pt-4 border-t">
                         <p class="text-sm text-gray-500">
-                            This technical specification was automatically generated by AI based on your project requirements.
-                            The estimates provided are based on industry standards and may vary depending on specific project details.
+                            Cette fiche technique a été générée automatiquement par IA en fonction de vos exigences de projet.
+                            Les estimations fournies sont basées sur les standards de l'industrie et peuvent varier en fonction des détails spécifiques du projet.
                         </p>
                         <p class="text-sm text-gray-500 mt-2">
-                            Generated on: {{ now()->format('F j, Y') }}
+                            Générée le : {{ now()->format('d/m/Y') }}
                         </p>
                     </div>
                 </div>
             </div>
         </div>
+
+        @if(isset($requiresRegistration) && $requiresRegistration)
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mt-8">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm text-yellow-700">
+                        <strong>Votre fiche technique est prête !</strong> Pour la conserver et y accéder ultérieurement, veuillez créer un compte.
+                    </p>
+                    <div class="mt-4">
+                        <a href="{{ route('register') }}" class="inline-block bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 mr-2">
+                            Créer un compte
+                        </a>
+                        <a href="{{ route('login') }}" class="inline-block bg-white border border-yellow-500 text-yellow-700 px-6 py-2 rounded-lg hover:bg-yellow-50 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                            Se connecter
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
 
         <div class="mt-8 text-center">
             <a href="{{ url('/pdf/generate/' . $clientResponse->id) }}" class="inline-block bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 mr-4">
@@ -231,5 +252,4 @@
             </a>
         </div>
     </div>
-</body>
-</html>
+@endsection

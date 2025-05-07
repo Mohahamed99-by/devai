@@ -8,6 +8,7 @@ class ClientResponse extends Model
 {
     protected $fillable = [
         'user_id',
+        'temp_identifier',
         'project_type',
         'project_description',
         'similar_applications',
