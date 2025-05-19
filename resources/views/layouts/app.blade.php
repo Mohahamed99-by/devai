@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'DevsAI - Générateur de Fiche Technique')</title>
+    <meta name="description" content="Transformez vos idées de projet en spécifications techniques détaillées grâce à notre plateforme alimentée par l'IA">
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGY0NmU1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTkuNzUgMTdMOSAyMGwtMSAxaDhsLTEtMS0uNzUtM00zIDEzaDE4TTUgMTdoMTRhMiAyIDAgMDAyLTJWNWEyIDIgMCAwMC0yLTJINWEyIDIgMCAwMC0yIDJ2MTBhMiAyIDAgMDAyIDJ6Ii8+PC9zdmc+">
 
     <!-- Fonts -->
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Lexend:wght@100..900&family=JetBrains+Mono:wght@100..800&display=swap" rel="stylesheet">
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -16,9 +23,37 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Additional Styles -->
+    <style>
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c7d2fe;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #818cf8;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Selection styling */
+        ::selection {
+            background-color: rgba(99, 102, 241, 0.2);
+        }
+    </style>
     @stack('styles')
 </head>
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-dark-50 font-sans antialiased selection:bg-primary-100 selection:text-primary-900">
     <div class="min-h-screen flex flex-col">
         @auth
             @if(Auth::user()->isAdmin())
@@ -43,7 +78,8 @@
 
                     <!-- Main Content -->
                     <div class="flex-1 overflow-x-hidden overflow-y-auto">
-                        @include('layouts.partials.navbar')
+                   
+                    @include('layouts.partials.navbar')
 
                         <main class="container mx-auto px-6 py-8">
                             @yield('content')
@@ -61,7 +97,9 @@
         @endauth
 
         <!-- Footer -->
-        @include('layouts.partials.footer')
+        @if(isset($showFooter) && $showFooter)
+            @include('layouts.partials.footer')
+        @endif
     </div>
 
     <!-- Scripts -->

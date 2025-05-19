@@ -7,13 +7,25 @@ use App\Models\ClientResponse;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\TechnicalSheetStatusChanged;
+use App\Services\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
+    protected $adminNotificationService;
+
+    /**
+     * Constructeur du contrôleur
+     */
+    public function __construct(AdminNotificationService $adminNotificationService)
+    {
+        $this->adminNotificationService = $adminNotificationService;
+    }
+
     /**
      * Show the login form
      */
@@ -34,6 +46,9 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+
+            // Envoyer un e-mail de notification à l'administrateur pour la connexion de l'utilisateur
+            $this->adminNotificationService->sendUserConnectionNotification(Auth::user());
 
             // Vérifier s'il y a une fiche technique temporaire à associer
             $tempIdentifier = Session::get('temp_client_response_id');

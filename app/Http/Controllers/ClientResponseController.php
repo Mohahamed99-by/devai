@@ -6,6 +6,7 @@ use App\Models\ClientResponse;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\TechnicalSheetStatusChanged;
+use App\Services\AdminNotificationService;
 use App\Services\OpenAIService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +19,12 @@ use Illuminate\Support\Str;
 class ClientResponseController extends Controller
 {
     protected $openAIService;
+    protected $adminNotificationService;
 
-    public function __construct(OpenAIService $openAIService)
+    public function __construct(OpenAIService $openAIService, AdminNotificationService $adminNotificationService)
     {
         $this->openAIService = $openAIService;
+        $this->adminNotificationService = $adminNotificationService;
     }
 
     public function showForm()
@@ -98,45 +101,57 @@ class ClientResponseController extends Controller
             }
 
             // Notifier l'utilisateur de la création de sa fiche (seulement si authentifié)
-            if (Auth::check()) {
-                Auth::user()->notify(new TechnicalSheetStatusChanged(
-                    $clientResponse,
-                    'draft',
-                    'Votre fiche technique a été créée avec succès.'
-                ));
-
-                // Notifier les administrateurs de la nouvelle fiche
-                $adminRole = Role::where('slug', 'admin')->first();
-                if ($adminRole) {
-                    $admins = User::where('role_id', $adminRole->id)->get();
-                    Notification::send($admins, new TechnicalSheetStatusChanged(
+            try {
+                if (Auth::check()) {
+                    Auth::user()->notify(new TechnicalSheetStatusChanged(
                         $clientResponse,
                         'draft',
-                        'Une nouvelle fiche technique a été créée et nécessite votre validation.'
+                        'Votre fiche technique a été créée avec succès.'
                     ));
+
+                    // Notifier les administrateurs de la nouvelle fiche
+                    $adminRole = Role::where('slug', 'admin')->first();
+                    if ($adminRole) {
+                        $admins = User::where('role_id', $adminRole->id)->get();
+                        Notification::send($admins, new TechnicalSheetStatusChanged(
+                            $clientResponse,
+                            'draft',
+                            'Une nouvelle fiche technique a été créée et nécessite votre validation.'
+                        ));
+                    }
                 }
+            } catch (\Exception $e) {
+                // Enregistrer l'erreur mais ne pas interrompre le processus
+                Log::warning('Erreur lors de l\'envoi des notifications: ' . $e->getMessage());
             }
 
             // Get AI analysis
-            $aiAnalysis = $this->openAIService->analyzeProjectRequirements($validatedData);
+            try {
+                $aiAnalysis = $this->openAIService->analyzeProjectRequirements($validatedData);
 
-            if (isset($aiAnalysis['error'])) {
-                Log::error('AI Analysis Error: ' . $aiAnalysis['message']);
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Failed to analyze requirements: ' . $aiAnalysis['message']
-                ], 500);
+                if (isset($aiAnalysis['error'])) {
+                    Log::error('AI Analysis Error: ' . $aiAnalysis['message']);
+                    // Continuer le processus même si l'analyse AI échoue
+                } else {
+                    // Update the client response with AI analysis
+                    $clientResponse->update([
+                        'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
+                        'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
+                        'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
+                        'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
+                        'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
+                        'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
+                    ]);
+                }
+            } catch (\Exception $e) {
+                // Enregistrer l'erreur mais ne pas interrompre le processus
+                Log::error('Erreur lors de l\'analyse IA: ' . $e->getMessage());
             }
 
-            // Update the client response with AI analysis
-            $clientResponse->update([
-                'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
-                'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
-                'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
-                'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
-                'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
-                'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
-            ]);
+            // Envoyer un seul e-mail de notification à l'administrateur
+            $userName = Auth::check() ? Auth::user()->name : 'Utilisateur non-authentifié';
+            $this->sendUnifiedAdminNotification($clientResponse, $userName);
+            Log::info('Email de notification unifié envoyé à l\'administrateur');
 
             // Préparer la réponse
             $responseData = [
@@ -251,6 +266,49 @@ class ClientResponseController extends Controller
     }
 
     /**
+     * Envoie une notification unifiée par email à l'administrateur
+     *
+     * @param ClientResponse $clientResponse
+     * @param string $userName
+     * @return void
+     */
+    protected function sendUnifiedAdminNotification(ClientResponse $clientResponse, string $userName)
+    {
+        try {
+            // Utiliser le service d'administration pour envoyer un seul email
+            $this->adminNotificationService->sendUnifiedNotification($clientResponse, $userName);
+
+            // Trouver tous les administrateurs pour les notifications dans l'application
+            $adminRole = Role::where('slug', 'admin')->first();
+            $admins = $adminRole ? User::where('role_id', $adminRole->id)->get() : collect([]);
+
+            // Envoyer la notification à chaque administrateur dans l'application
+            foreach ($admins as $admin) {
+                $admin->notify(new \App\Notifications\NewAnswerNotification($clientResponse));
+            }
+
+            Log::info('Notification unifiée envoyée à l\'administrateur', [
+                'client_response_id' => $clientResponse->id
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'envoi de la notification unifiée à l\'administrateur', [
+                'error' => $e->getMessage(),
+                'client_response_id' => $clientResponse->id
+            ]);
+        }
+    }
+
+    /**
+     * Méthode obsolète maintenue pour compatibilité
+     * @deprecated Utiliser sendUnifiedAdminNotification à la place
+     */
+    protected function notifyAdminAboutNewAnswer(ClientResponse $clientResponse)
+    {
+        $userName = Auth::check() ? Auth::user()->name : 'Utilisateur non-authentifié';
+        $this->sendUnifiedAdminNotification($clientResponse, $userName);
+    }
+
+    /**
      * Associer une réponse temporaire à un utilisateur après inscription
      */
     public function associateTemporaryResponse(Request $request)
@@ -307,6 +365,10 @@ class ClientResponseController extends Controller
                 'Une nouvelle fiche technique a été associée à un utilisateur et nécessite votre validation.'
             ));
         }
+
+        // Envoyer un seul e-mail de notification à l'administrateur
+        $this->sendUnifiedAdminNotification($clientResponse, Auth::user()->name);
+        Log::info('Email de notification unifié envoyé à l\'administrateur');
 
         // Supprimer l'identifiant temporaire de la session
         Session::forget('temp_client_response_id');

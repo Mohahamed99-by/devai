@@ -70,4 +70,12 @@ class ClientResponse extends Model
     {
         return $this->status === 'validated';
     }
+
+    /**
+     * Get the messages associated with this client response
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
+    }
 }

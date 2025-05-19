@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\ClientResponseController;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,10 @@ Route::get('/client-response/form', [ClientResponseController::class, 'showFormM
 Route::post('/client-response', [ClientResponseController::class, 'store']);
 Route::get('/client-response/confirmation/{clientResponse}', [ClientResponseController::class, 'showConfirmation'])->name('client-response.confirmation');
 Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController::class, 'generatePdf']);
+
+// Routes de test pour l'envoi d'email
+Route::get('/test-mail', [App\Http\Controllers\TestEmailController::class, 'testEmail']);
+Route::get('/test-unified-notification', [App\Http\Controllers\TestEmailController::class, 'testUnifiedNotification']);
 
 // Routes d'authentification
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
@@ -54,6 +59,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'getLatest'])
         ->name('notifications.latest');
 
+    // Aucune route de chat n'est nécessaire
+
     // Route pour afficher une fiche technique spécifique (doit être après les routes spécifiques)
     Route::get('/client-response/{clientResponse}', [ClientResponseController::class, 'show'])->name('client-response.show');
 
@@ -64,9 +71,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/technical-sheets/{clientResponse}', [App\Http\Controllers\TechnicalSheetController::class, 'destroy'])
             ->middleware('permission:delete_own_technical_sheets')
             ->name('technical-sheets.destroy')
-            ->where('clientResponse', function ($value, $route, $request) {
-                return auth()->user()->clientResponses()->where('id', $value)->exists();
-            });
+            ->where('clientResponse', '[0-9]+'); // Accepte uniquement les valeurs numériques
     });
 
     // Routes pour les administrateurs
@@ -84,6 +89,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/technical-sheets/admin/{clientResponse}', [App\Http\Controllers\TechnicalSheetController::class, 'adminDestroy'])
             ->middleware('permission:delete_technical_sheets')
             ->name('technical-sheets.admin.destroy');
+
+        // Aucune route de chat n'est nécessaire
 
         // Gestion des utilisateurs
         Route::middleware('permission:manage_users')->group(function () {

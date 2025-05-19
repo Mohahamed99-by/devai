@@ -7,15 +7,27 @@ use App\Models\ClientResponse;
 use App\Models\Role;
 use App\Models\User;
 use App\Notifications\TechnicalSheetStatusChanged;
+use App\Services\AdminNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rules\Password;
 
 class RegisterController extends Controller
 {
+    protected $adminNotificationService;
+
+    /**
+     * Constructeur du contrôleur
+     */
+    public function __construct(AdminNotificationService $adminNotificationService)
+    {
+        $this->adminNotificationService = $adminNotificationService;
+    }
+
     /**
      * Show the registration form
      */
@@ -50,6 +62,9 @@ class RegisterController extends Controller
         ]);
 
         Auth::login($user);
+
+        // Envoyer un e-mail de notification à l'administrateur pour la nouvelle inscription
+        $this->adminNotificationService->sendUserConnectionNotification($user);
 
         // Vérifier s'il y a une fiche technique temporaire à associer
         $tempIdentifier = Session::get('temp_client_response_id');

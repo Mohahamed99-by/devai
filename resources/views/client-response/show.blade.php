@@ -153,9 +153,13 @@
 
                     <div>
                         <h3 class="font-semibold text-blue-700">Technologies Recommandées</h3>
-                        @if(count($clientResponse->ai_suggested_technologies) > 0)
+                        @php
+                            $technologies = $clientResponse->ai_suggested_technologies ?? [];
+                            $technologies = is_array($technologies) ? $technologies : [];
+                        @endphp
+                        @if(count($technologies) > 0)
                             <ul class="mt-1 list-disc list-inside">
-                                @foreach($clientResponse->ai_suggested_technologies as $tech)
+                                @foreach($technologies as $tech)
                                     <li>{{ $tech }}</li>
                                 @endforeach
                             </ul>
@@ -166,9 +170,13 @@
 
                     <div>
                         <h3 class="font-semibold text-blue-700">Fonctionnalités Recommandées</h3>
-                        @if(count($clientResponse->ai_suggested_features) > 0)
+                        @php
+                            $features = $clientResponse->ai_suggested_features ?? [];
+                            $features = is_array($features) ? $features : [];
+                        @endphp
+                        @if(count($features) > 0)
                             <ul class="mt-1 list-disc list-inside">
-                                @foreach($clientResponse->ai_suggested_features as $feature)
+                                @foreach($features as $feature)
                                     <li>{{ $feature }}</li>
                                 @endforeach
                             </ul>
@@ -179,9 +187,13 @@
 
                     <div>
                         <h3 class="font-semibold text-blue-700">Facteurs de Complexité</h3>
-                        @if(count($clientResponse->ai_complexity_factors) > 0)
+                        @php
+                            $factors = $clientResponse->ai_complexity_factors ?? [];
+                            $factors = is_array($factors) ? $factors : [];
+                        @endphp
+                        @if(count($factors) > 0)
                             <ul class="mt-1 list-disc list-inside">
-                                @foreach($clientResponse->ai_complexity_factors as $factor)
+                                @foreach($factors as $factor)
                                     <li>{{ $factor }}</li>
                                 @endforeach
                             </ul>

@@ -292,12 +292,12 @@
                     </label>
                     <select name="budget_range" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
                         <option value="">Sélectionnez une fourchette de budget</option>
-                        <option value="< 5000€">Moins de 5 000€</option>
-                        <option value="5000€ - 10000€">5 000€ - 10 000€</option>
-                        <option value="10000€ - 20000€">10 000€ - 20 000€</option>
-                        <option value="20000€ - 50000€">20 000€ - 50 000€</option>
-                        <option value="50000€ - 100000€">50 000€ - 100 000€</option>
-                        <option value="> 100000€">Plus de 100 000€</option>
+                        <option value="< 5000DH">Moins de 5 000DH</option>
+                        <option value="5000DH - 10000DH">5 000DH - 10 000DH</option>
+                        <option value="10000DH - 20000DH">10 000DH - 20 000DH</option>
+                        <option value="20000DH - 50000DH">20 000DH - 50 000DH</option>
+                        <option value="50000DH - 100000DH">50 000DH - 100 000DH</option>
+                        <option value="> 100000DH">Plus de 100 000DH</option>
                     </select>
                     <p class="text-gray-500 text-xs mt-1">Cette information nous aide à recommander des solutions adaptées à votre budget</p>
                 </div>
@@ -599,7 +599,13 @@
                     .then(response => {
                         clearTimeout(timeoutId);
                         if (!response.ok) {
-                            throw new Error('Erreur réseau: ' + response.status);
+                            // Essayer de lire le corps de la réponse même en cas d'erreur
+                            return response.json().then(errorData => {
+                                throw new Error(errorData.message || 'Erreur réseau: ' + response.status);
+                            }).catch(jsonError => {
+                                // Si la réponse n'est pas du JSON valide
+                                throw new Error('Erreur réseau: ' + response.status);
+                            });
                         }
                         return response.json();
                     })
@@ -644,6 +650,20 @@
                         // Afficher un message d'erreur plus détaillé
                         const errorModal = document.createElement('div');
                         errorModal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
+
+                        // Déterminer le message d'erreur à afficher
+                        let errorMessage = error.message;
+                        let errorDetails = '';
+
+                        // Traiter les erreurs spécifiques
+                        if (errorMessage.includes('500')) {
+                            errorMessage = 'Une erreur est survenue sur le serveur. Veuillez réessayer dans quelques instants.';
+                            errorDetails = 'Le serveur a rencontré une erreur interne. Notre équipe technique a été notifiée.';
+                        } else if (errorMessage.includes('timeout') || errorMessage.includes('trop de temps')) {
+                            errorMessage = 'La requête a pris trop de temps à s\'exécuter.';
+                            errorDetails = 'Veuillez vérifier votre connexion internet et réessayer.';
+                        }
+
                         errorModal.innerHTML = `
                             <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
                                 <div class="flex justify-between items-center mb-4">
@@ -654,8 +674,9 @@
                                         </svg>
                                     </button>
                                 </div>
-                                <p class="text-gray-700 mb-4">Une erreur est survenue lors de la soumission du formulaire. Veuillez réessayer.</p>
-                                <p class="text-gray-500 text-sm mb-4">Détail technique: ${error.message}</p>
+                                <p class="text-gray-700 mb-4">${errorMessage}</p>
+                                ${errorDetails ? `<p class="text-gray-500 text-sm mb-4">${errorDetails}</p>` : ''}
+                                <p class="text-gray-500 text-xs mb-4">Détail technique: ${error.message}</p>
                                 <div class="flex justify-end">
                                     <button type="button" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" id="confirmErrorModal">
                                         Compris

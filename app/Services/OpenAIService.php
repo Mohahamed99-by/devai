@@ -33,6 +33,10 @@ class OpenAIService
                 'max_tokens' => 1000
             ]);
 
+            if (!isset($response->choices[0]->message->content)) {
+                throw new \Exception('Réponse OpenAI invalide: contenu manquant');
+            }
+
             $content = $response->choices[0]->message->content;
             return $this->parseAIResponse($content);
 

@@ -4,84 +4,129 @@
 
 @push('styles')
 <style>
-    .hero-shape {
+    /* Figma Design System */
+    :root {
+        --primary-gradient: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+        --secondary-gradient: linear-gradient(135deg, #E6F7FF 0%, #BAE7FF 100%);
+        --glass-effect: backdrop-filter: blur(10px) saturate(180%);
+    }
+
+    /* Enhanced Figma-inspired styles */
+    .figma-shape {
         position: absolute;
-        bottom: 0;
+        z-index: 0;
+    }
+
+    .figma-glass {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px) saturate(180%);
+        -webkit-backdrop-filter: blur(10px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 24px;
+    }
+
+    .figma-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform-origin: center;
+    }
+
+    .figma-card:hover {
+        transform: scale(1.02) translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .figma-button {
+        background: var(--primary-gradient);
+        border-radius: 16px;
+        padding: 16px 32px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .figma-button::after {
+        content: '';
+        position: absolute;
+        top: 0;
         left: 0;
         width: 100%;
-        overflow: hidden;
-        line-height: 0;
-        transform: rotate(180deg);
+        height: 100%;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+        transform: translateX(-100%);
+        transition: transform 0.6s;
     }
 
-    .hero-shape svg {
+    .figma-button:hover::after {
+        transform: translateX(100%);
+    }
+
+    .figma-blob {
+        animation: figma-morph 20s ease-in-out infinite;
+        background-image: var(--primary-gradient);
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        position: absolute;
+        transition: all 1s ease-in-out;
+        filter: blur(20px);
+        opacity: 0.5;
+    }
+
+    @keyframes figma-morph {
+        0% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        25% { border-radius: 40% 60% 70% 30% / 30% 60% 40% 70%; }
+        50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        75% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+        100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+    }
+
+    .figma-float {
+        animation: figma-float 8s ease-in-out infinite;
+    }
+
+    @keyframes figma-float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .hero-gradient {
+        background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
         position: relative;
-        display: block;
-        width: calc(100% + 1.3px);
-        height: 80px;
     }
 
-    .hero-shape .shape-fill {
-        fill: #FFFFFF;
-    }
-    
-    .feature-card {
-        transition: all 0.3s ease;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-10px);
-    }
-    
-    .feature-icon {
-        transition: all 0.3s ease;
-    }
-    
-    .feature-card:hover .feature-icon {
-        transform: scale(1.1);
-        background-color: rgba(79, 70, 229, 0.2);
-    }
-    
-    .benefit-item {
-        transition: all 0.3s ease;
-    }
-    
-    .benefit-item:hover {
-        transform: translateX(5px);
-    }
-    
-    .gradient-text {
-        background: linear-gradient(to right, #4F46E5, #7C3AED);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .blob-animation {
-        animation: blob 7s infinite;
-    }
-    
-    @keyframes blob {
-        0% {
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        }
-        50% {
-            border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
-        }
-        100% {
-            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-        }
+    .hero-gradient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        opacity: 0.5;
     }
 </style>
 @endpush
 
 @section('content')
-    <!-- Hero Section -->
-    <div class="relative bg-gradient-to-br from-indigo-600 via-blue-700 to-purple-800 text-white overflow-hidden">
+    <!-- Hero Section avec nouveau design Figma -->
+    <div class="hero-gradient relative overflow-hidden min-h-screen">
+        <!-- Blobs d'arrière-plan -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="figma-blob w-96 h-96 top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="figma-blob w-96 h-96 bottom-0 right-0 translate-x-1/2 translate-y-1/2" style="background-image: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);"></div>
+        </div>
+
         <div class="absolute top-0 left-0 w-full h-full opacity-10">
             <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full mix-blend-overlay filter blur-3xl"></div>
             <div class="absolute bottom-10 right-10 w-72 h-72 bg-pink-400 rounded-full mix-blend-overlay filter blur-3xl"></div>
         </div>
-        
+
         <div class="container mx-auto px-4 py-24 relative z-10">
             <div class="max-w-5xl mx-auto text-center">
                 <div class="inline-block mb-4 px-6 py-2 bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm rounded-full text-black  text-sm font-medium">
@@ -94,7 +139,7 @@
                     Transformez vos idées de projet en spécifications techniques détaillées grâce à notre plateforme alimentée par l'IA
                 </p>
                 <div class="flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="{{ route('client-response.form') }}" class="inline-flex items-center justify-center bg-white text-indigo-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-indigo-50 transition duration-300 transform hover:scale-105">
+                    <a href="{{ route('client-response.form') }}" class="inline-flex items-center justify-center figma-button">
                         <span>Commencer l'analyse</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -108,13 +153,13 @@
                     </a>
                 </div>
             </div>
-            
+
             <div class="mt-16 max-w-5xl mx-auto relative">
                 <div class="absolute inset-0 bg-gradient-to-t from-indigo-600 via-transparent to-transparent z-10"></div>
                 <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Dashboard Preview" class="w-full h-auto rounded-xl shadow-2xl">
             </div>
         </div>
-        
+
         <div class="hero-shape">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
@@ -196,7 +241,7 @@
                         Avantages
                     </div>
                     <h2 class="text-3xl md:text-4xl font-bold mb-8 gradient-text">Pourquoi utiliser notre plateforme ?</h2>
-                    
+
                     <div class="space-y-6">
                         <div class="flex items-start benefit-item">
                             <div class="flex-shrink-0 mt-1 bg-indigo-100 rounded-full p-2">
@@ -247,7 +292,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="md:w-1/2 relative">
                     <div class="relative z-10">
                         <div class="w-64 h-64 md:w-80 md:h-80 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl shadow-xl overflow-hidden blob-animation mx-auto">
@@ -266,7 +311,7 @@
         <div class="max-w-4xl mx-auto bg-gradient-to-br from-indigo-600 to-purple-700 rounded-3xl shadow-xl p-12 text-white">
             <h2 class="text-3xl md:text-4xl font-bold mb-6">Prêt à transformer vos idées en spécifications techniques ?</h2>
             <p class="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">Obtenez une fiche technique détaillée en quelques minutes grâce à notre générateur automatique alimenté par l'IA.</p>
-            <a href="{{ route('client-response.form') }}" class="inline-flex items-center justify-center bg-white text-indigo-700 font-semibold px-8 py-4 rounded-xl shadow-lg hover:bg-indigo-50 transition duration-300 transform hover:scale-105">
+            <a href="{{ route('client-response.form') }}" class="inline-flex items-center justify-center figma-button">
                 <span>Commencer maintenant</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -282,7 +327,7 @@
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             document.querySelector(this.getAttribute('href')).scrollIntoView({
                 behavior: 'smooth'
             });
