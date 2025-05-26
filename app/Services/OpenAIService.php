@@ -14,24 +14,116 @@ class OpenAIService
 
     public function generateChatResponse($messages, $options = [])
     {
-        try {
+        return $this->executeWithRetry(function() use ($messages, $options) {
+            // Validate API key
+            if (empty(config('openai.api_key'))) {
+                Log::error('OpenAI API key is not configured');
+                return "Configuration manquante. Veuillez contacter l'administrateur.";
+            }
+
+            // Validate messages
+            if (empty($messages) || !is_array($messages)) {
+                Log::error('OpenAI Service Error: Invalid messages format', ['messages' => $messages]);
+                return "Format de message invalide. Veuillez réessayer.";
+            }
+
+            // Augmenter la limite de temps d'exécution pour cette requête
+            set_time_limit(90);
+
+            Log::info('OpenAI Chat Request', [
+                'model' => config('openai.model', 'gpt-3.5-turbo'),
+                'message_count' => count($messages),
+                'options' => $options
+            ]);
+
             $response = OpenAI::chat()->create([
                 'model' => config('openai.model', 'gpt-3.5-turbo'),
                 'messages' => $messages,
-                'temperature' => $options['temperature'] ?? 0.7,
-                'max_tokens' => $options['max_tokens'] ?? 500,
+                'temperature' => $options['temperature'] ?? config('openai.temperature', 0.7),
+                'max_tokens' => $options['max_tokens'] ?? config('openai.max_tokens.chat', 500),
+            ]);
+
+            Log::info('OpenAI Chat Response received', [
+                'has_choices' => isset($response->choices),
+                'choices_count' => isset($response->choices) ? count($response->choices) : 0
             ]);
 
             if (isset($response->choices[0]->message->content)) {
                 return $response->choices[0]->message->content;
             } else {
-                Log::error('OpenAI API Error: Invalid response format');
+                Log::error('OpenAI API Error: Invalid response format', [
+                    'response' => json_encode($response)
+                ]);
                 return "Désolé, je n'ai pas pu générer une réponse. Veuillez réessayer plus tard.";
             }
-        } catch (\Exception $e) {
-            Log::error('OpenAI Service Error: ' . $e->getMessage());
-            return "Désolé, une erreur s'est produite. Veuillez réessayer plus tard.";
+        }, 'chat');
+    }
+
+    private function executeWithRetry(callable $callback, string $operation = 'general')
+    {
+        $maxAttempts = config('openai.retry.max_attempts', 3);
+        $delay = config('openai.retry.delay', 1000);
+
+        for ($attempt = 1; $attempt <= $maxAttempts; $attempt++) {
+            try {
+                return $callback();
+            } catch (\OpenAI\Exceptions\ErrorException $e) {
+                Log::warning("OpenAI API Error (attempt {$attempt}/{$maxAttempts}) for {$operation}: " . $e->getMessage(), [
+                    'error_type' => get_class($e),
+                    'error_code' => $e->getCode(),
+                    'attempt' => $attempt
+                ]);
+
+                // Ne pas retry pour certaines erreurs
+                if (str_contains($e->getMessage(), 'invalid_api_key') ||
+                    str_contains($e->getMessage(), 'quota') ||
+                    $attempt === $maxAttempts) {
+
+                    if (str_contains($e->getMessage(), 'rate limit')) {
+                        return "Trop de requêtes. Veuillez patienter quelques instants avant de réessayer.";
+                    } elseif (str_contains($e->getMessage(), 'quota')) {
+                        return "Quota API dépassé. Veuillez contacter l'administrateur.";
+                    } elseif (str_contains($e->getMessage(), 'invalid_api_key')) {
+                        return "Clé API invalide. Veuillez contacter l'administrateur.";
+                    } else {
+                        return "Erreur API OpenAI. Veuillez réessayer plus tard.";
+                    }
+                }
+
+                // Attendre avant de réessayer
+                if ($attempt < $maxAttempts) {
+                    usleep($delay * 1000); // Convertir en microsecondes
+                    $delay *= 2; // Backoff exponentiel
+                }
+            } catch (\Exception $e) {
+                Log::error("OpenAI Service Error (attempt {$attempt}/{$maxAttempts}) for {$operation}: " . $e->getMessage(), [
+                    'error_type' => get_class($e),
+                    'error_code' => $e->getCode(),
+                    'attempt' => $attempt,
+                    'trace' => $e->getTraceAsString()
+                ]);
+
+                // Pour les erreurs de timeout, essayer de nouveau
+                if (str_contains($e->getMessage(), 'timeout') ||
+                    str_contains($e->getMessage(), 'Maximum execution time') ||
+                    str_contains($e->getMessage(), 'cURL error 28')) {
+
+                    if ($attempt < $maxAttempts) {
+                        Log::info("Retry après timeout (attempt {$attempt}/{$maxAttempts})");
+                        usleep($delay * 1000);
+                        $delay *= 2;
+                        continue;
+                    } else {
+                        return "La requête a pris trop de temps. Veuillez réessayer avec une demande plus simple.";
+                    }
+                }
+
+                // Pour les autres erreurs, arrêter immédiatement
+                return "Désolé, une erreur s'est produite. Veuillez réessayer plus tard.";
+            }
         }
+
+        return "Désolé, une erreur s'est produite après plusieurs tentatives. Veuillez réessayer plus tard.";
     }
 
     public function generateSystemPrompt($user)
@@ -51,39 +143,81 @@ class OpenAIService
 
     public function analyzeProjectRequirements(array $clientResponse): array
     {
-        try {
+        $result = $this->executeWithRetry(function() use ($clientResponse) {
+            // Validate API key
+            if (empty(config('openai.api_key'))) {
+                Log::error('OpenAI API key is not configured for project analysis');
+                return [
+                    'error' => true,
+                    'message' => 'Configuration API manquante'
+                ];
+            }
+
+            // Validate input data
+            if (empty($clientResponse)) {
+                Log::error('OpenAI Service Error: Empty client response data');
+                return [
+                    'error' => true,
+                    'message' => 'Données de projet manquantes'
+                ];
+            }
+
+            // Augmenter la limite de temps d'exécution pour cette requête
+            set_time_limit(120); // 2 minutes pour l'analyse de projet
+
+            Log::info('OpenAI Project Analysis Request', [
+                'data_keys' => array_keys($clientResponse),
+                'model' => config('openai.model', 'gpt-3.5-turbo')
+            ]);
+
             $prompt = $this->buildAnalysisPrompt($clientResponse);
 
             $response = OpenAI::chat()->create([
-                'model' => config('openai.model', 'gpt-4'),
+                'model' => config('openai.model', 'gpt-3.5-turbo'), // Utiliser gpt-3.5-turbo pour plus de rapidité
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => 'You are an expert software project analyzer. Analyze the project requirements and provide detailed technical recommendations in a structured JSON format.'
+                        'content' => 'You are an expert software project analyzer. Analyze the project requirements and provide detailed technical recommendations in a structured JSON format. Be concise but comprehensive.'
                     ],
                     [
                         'role' => 'user',
                         'content' => $prompt
                     ]
                 ],
-                'temperature' => 0.7,
-                'max_tokens' => 1000
+                'temperature' => config('openai.temperature', 0.7),
+                'max_tokens' => config('openai.max_tokens.analysis', 1500)
+            ]);
+
+            Log::info('OpenAI Project Analysis Response received', [
+                'has_choices' => isset($response->choices),
+                'choices_count' => isset($response->choices) ? count($response->choices) : 0
             ]);
 
             if (!isset($response->choices[0]->message->content)) {
+                Log::error('OpenAI API Error: Invalid response format for project analysis', [
+                    'response' => json_encode($response)
+                ]);
                 throw new \Exception('Réponse OpenAI invalide: contenu manquant');
             }
 
             $content = $response->choices[0]->message->content;
-            return $this->parseAIResponse($content);
+            Log::info('OpenAI Analysis Content received', [
+                'content_length' => strlen($content),
+                'content_preview' => substr($content, 0, 200)
+            ]);
 
-        } catch (\Exception $e) {
-            Log::error('OpenAI API Error: ' . $e->getMessage());
+            return $this->parseAIResponse($content);
+        }, 'project_analysis');
+
+        // Si le résultat est une chaîne (message d'erreur du retry), le convertir en format array
+        if (is_string($result)) {
             return [
                 'error' => true,
-                'message' => $e->getMessage()
+                'message' => $result
             ];
         }
+
+        return $result;
     }
 
     private function buildAnalysisPrompt(array $data): string

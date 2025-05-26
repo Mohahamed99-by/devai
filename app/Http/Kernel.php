@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'permission' => \App\Http\Middleware\CheckPermission::class,
         'role' => \App\Http\Middleware\CheckRole::class,
+        'extend.time' => \App\Http\Middleware\ExtendTimeLimit::class,
     ];
 }

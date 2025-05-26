@@ -31,7 +31,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('/client-response/form', [ClientResponseController::class, 'showFormModal'])->name('client-response.form');
-Route::post('/client-response', [ClientResponseController::class, 'store']);
+Route::post('/client-response', [ClientResponseController::class, 'store'])->middleware('extend.time:180'); // 3 minutes pour l'analyse
 Route::get('/client-response/confirmation/{clientResponse}', [ClientResponseController::class, 'showConfirmation'])->name('client-response.confirmation');
 Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController::class, 'generatePdf']);
 
@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
     Route::get('/chat/new', [App\Http\Controllers\ChatController::class, 'newConversation'])->name('chat.new');
     Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'show'])->name('chat.show');
-    Route::post('/chat', [App\Http\Controllers\ChatController::class, 'store'])->name('chat.store');
+    Route::post('/chat', [App\Http\Controllers\ChatController::class, 'store'])->middleware('extend.time:90')->name('chat.store'); // 90 secondes pour le chat
     Route::put('/chat/{id}/title', [App\Http\Controllers\ChatController::class, 'updateTitle'])->name('chat.update-title');
     Route::post('/chat/{id}/archive', [App\Http\Controllers\ChatController::class, 'archiveConversation'])->name('chat.archive');
 

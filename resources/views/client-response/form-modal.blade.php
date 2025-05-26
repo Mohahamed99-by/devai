@@ -616,34 +616,62 @@
             </div>
         </form>
 
-        <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm items-center justify-center z-50 hidden" style="display: none;">
-            <div class="bg-white p-8 rounded-xl shadow-xl text-center max-w-md w-full">
-                <div class="relative w-20 h-20 mx-auto mb-6">
-                    <div class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-indigo-200"></div>
-                    <div class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-indigo-600 border-t-transparent animate-spin"></div>
+        <div id="loadingOverlay" class="fixed inset-0 bg-gradient-to-br from-black/60 to-gray-900/60 backdrop-blur-sm items-center justify-center z-50 hidden" style="display: none;">
+            <div class="bg-white p-8 rounded-2xl shadow-2xl text-center max-w-lg w-full mx-4 border border-gray-200">
+                <!-- Animation principale -->
+                <div class="relative w-24 h-24 mx-auto mb-6">
+                    <div class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-primary-100"></div>
+                    <div class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-primary-600 border-t-transparent animate-spin"></div>
                     <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                        <svg class="w-8 h-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center shadow-lg">
+                            <svg class="w-6 h-6 text-white animate-pulse" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Titre et description -->
+                <h3 class="text-2xl font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent mb-3">Analyse IA en cours</h3>
+                <p class="text-lg font-semibold text-gray-700 mb-6">Notre intelligence artificielle analyse vos besoins...</p>
+
+                <!-- Étapes d'analyse -->
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center justify-start p-3 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl border border-primary-100">
+                        <div class="w-5 h-5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full animate-pulse mr-4 flex-shrink-0"></div>
+                        <p class="text-gray-700 font-medium text-left">Analyse des exigences du projet</p>
+                    </div>
+                    <div class="flex items-center justify-start p-3 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl border border-primary-100" style="animation-delay: 0.5s">
+                        <div class="w-5 h-5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full animate-pulse mr-4 flex-shrink-0" style="animation-delay: 0.5s"></div>
+                        <p class="text-gray-700 font-medium text-left">Identification des technologies appropriées</p>
+                    </div>
+                    <div class="flex items-center justify-start p-3 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl border border-primary-100" style="animation-delay: 1s">
+                        <div class="w-5 h-5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full animate-pulse mr-4 flex-shrink-0" style="animation-delay: 1s"></div>
+                        <p class="text-gray-700 font-medium text-left">Génération des recommandations</p>
+                    </div>
+                    <div class="flex items-center justify-start p-3 bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl border border-primary-100" style="animation-delay: 1.5s">
+                        <div class="w-5 h-5 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full animate-pulse mr-4 flex-shrink-0" style="animation-delay: 1.5s"></div>
+                        <p class="text-gray-700 font-medium text-left">Création de votre fiche technique</p>
+                    </div>
+                </div>
+
+                <!-- Barre de progression -->
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="bg-gradient-to-r from-primary-600 to-secondary-600 h-2 rounded-full animate-pulse" style="width: 75%; transition: width 2s ease-in-out;"></div>
+                </div>
+
+                <!-- Message d'information -->
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-4">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
+                        <p class="text-blue-800 text-sm font-medium">Ce processus peut prendre jusqu'à 3 minutes selon la complexité de votre projet.</p>
                     </div>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Analyse en cours</h3>
-                <p class="text-lg font-semibold text-indigo-600 mb-4">Notre IA analyse vos besoins...</p>
-                <div class="space-y-2 mb-4">
-                    <div class="flex items-center">
-                        <div class="w-4 h-4 bg-indigo-600 rounded-full animate-pulse mr-3"></div>
-                        <p class="text-gray-600">Analyse des exigences du projet</p>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-4 h-4 bg-indigo-600 rounded-full animate-pulse mr-3" style="animation-delay: 0.5s"></div>
-                        <p class="text-gray-600">Identification des technologies appropriées</p>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-4 h-4 bg-indigo-600 rounded-full animate-pulse mr-3" style="animation-delay: 1s"></div>
-                        <p class="text-gray-600">Génération des recommandations</p>
-                    </div>
-                </div>
-                <p class="text-sm text-gray-500 mt-4">Ce processus peut prendre jusqu'à une minute. Merci de votre patience.</p>
+
+                <!-- Timer -->
+                <p class="text-xs text-gray-500" id="loadingTimer">Temps écoulé: <span id="timerSeconds">0</span>s</p>
             </div>
         </div>
     </div>
@@ -751,11 +779,22 @@
                     }
                 }
 
-                // Envoyer les données au serveur avec un timeout de sécurité
+                // Démarrer le timer
+                let timerSeconds = 0;
+                const timerElement = document.getElementById('timerSeconds');
+                const timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    if (timerElement) {
+                        timerElement.textContent = timerSeconds;
+                    }
+                }, 1000);
+
+                // Envoyer les données au serveur avec un timeout de sécurité étendu
                 const fetchTimeout = new Promise((resolve, reject) => {
                     const timeoutId = setTimeout(() => {
-                        reject(new Error('La requête a pris trop de temps à s\'exécuter'));
-                    }, 60000); // 60 secondes de timeout
+                        clearInterval(timerInterval);
+                        reject(new Error('La requête a pris trop de temps à s\'exécuter (plus de 3 minutes)'));
+                    }, 180000); // 3 minutes de timeout
 
                     fetch('/client-response', {
                         method: 'POST',
@@ -767,6 +806,7 @@
                     })
                     .then(response => {
                         clearTimeout(timeoutId);
+                        clearInterval(timerInterval);
                         if (!response.ok) {
                             // Essayer de lire le corps de la réponse même en cas d'erreur
                             return response.json().then(errorData => {
@@ -784,6 +824,21 @@
 
                 fetchTimeout
                     .then(data => {
+                        clearInterval(timerInterval);
+
+                        // Afficher un message de succès avant la redirection
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                        successMessage.innerHTML = `
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                </svg>
+                                Analyse terminée avec succès !
+                            </div>
+                        `;
+                        document.body.appendChild(successMessage);
+
                         // Vérifier si l'utilisateur doit s'inscrire
                         if (data.requires_login) {
                             // Stocker l'identifiant temporaire dans le localStorage pour plus de sécurité
@@ -791,16 +846,20 @@
                                 localStorage.setItem('temp_client_response_id', data.temp_identifier);
                             }
                         }
-                        // Rediriger vers l'URL fournie par le serveur
-                        if (data.redirect_url) {
-                            window.location.href = data.redirect_url;
-                        } else {
-                            // Fallback au cas où l'URL de redirection n'est pas fournie
-                            window.location.href = '/client-response/' + data.id;
-                        }
+
+                        // Rediriger après un court délai pour montrer le message de succès
+                        setTimeout(() => {
+                            if (data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                            } else {
+                                // Fallback au cas où l'URL de redirection n'est pas fournie
+                                window.location.href = '/client-response/' + data.id;
+                            }
+                        }, 1000);
                     })
                     .catch(error => {
                         console.error('Erreur:', error);
+                        clearInterval(timerInterval);
 
                         // Masquer l'overlay de chargement
                         loadingOverlay.classList.add('hidden');
