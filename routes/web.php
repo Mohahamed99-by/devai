@@ -33,6 +33,7 @@ Route::get('/', function () {
 Route::get('/client-response/form', [ClientResponseController::class, 'showFormModal'])->name('client-response.form');
 Route::post('/client-response', [ClientResponseController::class, 'store'])->middleware('extend.time:180'); // 3 minutes pour l'analyse
 Route::get('/client-response/confirmation/{clientResponse}', [ClientResponseController::class, 'showConfirmation'])->name('client-response.confirmation');
+Route::post('/client-response/{clientResponse}/reanalyze', [ClientResponseController::class, 'reanalyze'])->middleware('extend.time:180')->name('client-response.reanalyze');
 Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController::class, 'generatePdf']);
 
 // Routes de test pour l'envoi d'email

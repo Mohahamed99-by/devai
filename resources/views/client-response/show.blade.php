@@ -410,9 +410,88 @@
                 </svg>
                 Télécharger en PDF
             </a>
-            <a href="{{ url('/') }}" class="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                Nouvelle Analyse
+            <button id="reanalyzeBtn" class="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 mr-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                </svg>
+                Relancer l'Analyse
+            </button>
+            <a href="{{ url('/') }}" class="inline-block bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                Nouvelle Fiche
             </a>
         </div>
+
+        <!-- Overlay de chargement pour la re-analyse -->
+        <div id="reanalyzeOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+            <div class="flex items-center justify-center min-h-screen">
+                <div class="bg-white rounded-lg p-8 max-w-md mx-4 text-center">
+                    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mx-auto mb-4"></div>
+                    <h3 class="text-lg font-semibold mb-2">Re-analyse en cours...</h3>
+                    <p class="text-gray-600 mb-4">Nous mettons à jour votre analyse IA avec les dernières données.</p>
+                    <div class="text-sm text-gray-500">
+                        <span id="reanalyzeTimer">0</span> secondes
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        document.getElementById('reanalyzeBtn').addEventListener('click', function() {
+            const overlay = document.getElementById('reanalyzeOverlay');
+            const timerElement = document.getElementById('reanalyzeTimer');
+            let seconds = 0;
+
+            // Afficher l'overlay
+            overlay.classList.remove('hidden');
+
+            // Démarrer le timer
+            const timer = setInterval(() => {
+                seconds++;
+                timerElement.textContent = seconds;
+            }, 1000);
+
+            // Envoyer la requête de re-analyse
+            fetch('{{ route("client-response.reanalyze", $clientResponse->id) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                clearInterval(timer);
+                overlay.classList.add('hidden');
+
+                if (data.status === 'success') {
+                    // Afficher un message de succès
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+                    successMessage.innerHTML = `
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            ${data.message}
+                        </div>
+                    `;
+                    document.body.appendChild(successMessage);
+
+                    // Recharger la page après un court délai
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    alert('Erreur: ' + data.message);
+                }
+            })
+            .catch(error => {
+                clearInterval(timer);
+                overlay.classList.add('hidden');
+                console.error('Erreur:', error);
+                alert('Une erreur est survenue lors de la re-analyse.');
+            });
+        });
+        </script>
     </div>
 @endsection

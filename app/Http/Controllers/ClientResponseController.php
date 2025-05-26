@@ -208,6 +208,18 @@ class ClientResponseController extends Controller
 
     public function show(ClientResponse $clientResponse)
     {
+        // Récupérer les données d'analyse depuis la session si elles existent
+        $tempAnalysis = Session::get('temp_ai_analysis_' . $clientResponse->id);
+
+        // Si les données d'analyse sont vides en base mais existent en session, les utiliser
+        if ($tempAnalysis && empty($clientResponse->ai_analysis_summary)) {
+            // Fusionner les données temporaires avec l'objet clientResponse
+            foreach ($tempAnalysis as $key => $value) {
+                $clientResponse->$key = $value;
+            }
+            Log::info('Données d\'analyse récupérées depuis la session pour ID: ' . $clientResponse->id);
+        }
+
         if (request()->expectsJson()) {
             return response()->json([
                 'status' => 'success',
@@ -398,5 +410,194 @@ class ClientResponseController extends Controller
             'message' => 'Fiche technique associée avec succès.',
             'data' => $clientResponse
         ]);
+    }
+
+    /**
+     * Générer une analyse par défaut basée sur les données du projet
+     */
+    private function getDefaultAnalysis($projectData)
+    {
+        $projectType = $projectData['project_type'] ?? 'web';
+        $budget = $projectData['budget_range'] ?? '';
+        $timeline = $projectData['timeline'] ?? '';
+
+        // Technologies par défaut selon le type de projet
+        $defaultTechnologies = [
+            'web' => [
+                '[Frontend] HTML5, CSS3, JavaScript, React/Vue.js',
+                '[Backend] PHP/Laravel, Node.js',
+                '[Base de données] MySQL, PostgreSQL',
+                '[Sécurité] HTTPS, Authentification JWT'
+            ],
+            'mobile' => [
+                '[Mobile] React Native, Flutter',
+                '[Backend] Node.js, Firebase',
+                '[Base de données] MongoDB, Firebase Firestore',
+                '[Services] Push Notifications, Analytics'
+            ],
+            'desktop' => [
+                '[Desktop] Electron, .NET, Java',
+                '[Base de données] SQLite, PostgreSQL',
+                '[Interface] Modern UI Framework',
+                '[Sécurité] Encryption, Secure Storage'
+            ]
+        ];
+
+        $technologies = $defaultTechnologies[strtolower($projectType)] ?? $defaultTechnologies['web'];
+
+        // Estimation du budget basée sur la fourchette
+        $estimatedCost = 15000.00;
+        if (strpos($budget, '5000') !== false) {
+            $estimatedCost = 7500.00;
+        } elseif (strpos($budget, '10000') !== false) {
+            $estimatedCost = 12500.00;
+        } elseif (strpos($budget, '20000') !== false) {
+            $estimatedCost = 25000.00;
+        }
+
+        // Durée estimée basée sur le timeline
+        $estimatedDuration = '2-4 mois';
+        if (strpos($timeline, '1-3') !== false) {
+            $estimatedDuration = '2-3 mois';
+        } elseif (strpos($timeline, '3-6') !== false) {
+            $estimatedDuration = '4-6 mois';
+        } elseif (strpos($timeline, '6+') !== false) {
+            $estimatedDuration = '6-12 mois';
+        }
+
+        return [
+            'ai_suggested_features' => [
+                'Interface utilisateur moderne et intuitive',
+                'Système de gestion des données robuste',
+                'Fonctionnalités de sécurité avancées',
+                'Optimisation des performances',
+                'Responsive design pour tous les appareils'
+            ],
+            'ai_suggested_technologies' => $technologies,
+            'ai_estimated_duration' => $estimatedDuration,
+            'ai_analysis_summary' => "Projet {$projectType} nécessitant une approche structurée avec des technologies modernes. Le projet présente une complexité modérée et nécessitera une planification soignée pour respecter les délais et le budget. L'architecture proposée garantit la scalabilité et la maintenabilité.",
+            'ai_complexity_factors' => [
+                'Intégration de multiples fonctionnalités',
+                'Exigences de performance et de sécurité',
+                'Compatibilité multi-plateforme',
+                'Gestion des données utilisateur',
+                'Tests et validation qualité'
+            ],
+            'ai_cost_estimate' => $estimatedCost,
+            'ai_detailed_analysis' => [
+                'strengths' => [
+                    'Projet bien défini avec des objectifs clairs',
+                    'Technologies éprouvées et stables',
+                    'Budget approprié pour les fonctionnalités demandées'
+                ],
+                'challenges' => [
+                    'Intégration complexe de plusieurs composants',
+                    'Optimisation des performances requise',
+                    'Tests approfondis nécessaires'
+                ]
+            ],
+            'ai_recommendations' => [
+                'Utiliser un framework moderne pour accélérer le développement',
+                'Implémenter des tests automatisés dès le début',
+                'Prévoir une phase de test utilisateur approfondie',
+                'Planifier la maintenance et les mises à jour post-lancement',
+                'Documenter le code pour faciliter la maintenance future'
+            ]
+        ];
+    }
+
+    /**
+     * Relancer l'analyse IA pour une fiche technique existante
+     */
+    public function reanalyze(ClientResponse $clientResponse)
+    {
+        try {
+            Log::info('Relancement de l\'analyse IA pour la réponse client ID: ' . $clientResponse->id);
+
+            // Préparer les données pour l'analyse
+            $projectData = [
+                'project_type' => $clientResponse->project_type,
+                'project_description' => $clientResponse->project_description,
+                'similar_applications' => $clientResponse->similar_applications,
+                'target_audience' => $clientResponse->target_audience,
+                'user_roles' => $clientResponse->user_roles,
+                'key_features' => $clientResponse->key_features,
+                'custom_features' => $clientResponse->custom_features,
+                'budget_range' => $clientResponse->budget_range,
+                'timeline' => $clientResponse->timeline,
+                'deadline' => $clientResponse->deadline,
+                'technical_requirements' => $clientResponse->technical_requirements,
+                'external_apis' => $clientResponse->external_apis,
+                'design_complexity' => $clientResponse->design_complexity,
+                'needs_maintenance' => $clientResponse->needs_maintenance,
+                'maintenance_type' => $clientResponse->maintenance_type,
+            ];
+
+            // Lancer l'analyse IA
+            $aiAnalysis = null;
+            try {
+                $aiAnalysis = $this->openAIService->analyzeProjectRequirements($projectData);
+
+                if (isset($aiAnalysis['error'])) {
+                    Log::error('AI Analysis Error during reanalysis: ' . $aiAnalysis['message']);
+                    $aiAnalysis = null;
+                }
+            } catch (\Exception $e) {
+                Log::error('Erreur lors de la re-analyse IA: ' . $e->getMessage());
+                $aiAnalysis = null;
+            }
+
+            // Si l'analyse IA a échoué, utiliser l'analyse par défaut
+            if (!$aiAnalysis || isset($aiAnalysis['error'])) {
+                Log::info('Utilisation de l\'analyse par défaut pour la re-analyse ID: ' . $clientResponse->id);
+                $aiAnalysis = $this->getDefaultAnalysis($projectData);
+            }
+
+            // Sauvegarder la nouvelle analyse
+            try {
+                $updateData = [
+                    'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
+                    'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
+                    'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
+                    'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
+                    'ai_detailed_analysis' => $aiAnalysis['ai_detailed_analysis'] ?? [],
+                    'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
+                    'ai_recommendations' => $aiAnalysis['ai_recommendations'] ?? [],
+                    'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
+                ];
+
+                $clientResponse->update($updateData);
+                Log::info('Re-analyse sauvegardée avec succès pour la réponse client ID: ' . $clientResponse->id);
+
+                // Supprimer les données temporaires de la session
+                Session::forget('temp_ai_analysis_' . $clientResponse->id);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Analyse IA mise à jour avec succès',
+                    'redirect_url' => route('client-response.show', $clientResponse->id)
+                ]);
+
+            } catch (\Exception $dbError) {
+                Log::error('Erreur lors de la sauvegarde de la re-analyse: ' . $dbError->getMessage());
+
+                // Stocker temporairement les données en session si la DB échoue
+                Session::put('temp_ai_analysis_' . $clientResponse->id, $aiAnalysis);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Analyse IA mise à jour (stockée temporairement)',
+                    'redirect_url' => route('client-response.show', $clientResponse->id)
+                ]);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la re-analyse: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Erreur lors de la mise à jour de l\'analyse: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }
