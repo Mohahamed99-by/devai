@@ -6,40 +6,48 @@
     <title>Nouvelle Activité sur DevsAI</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
             color: #333;
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .email-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
         .header {
-            background-color: #4a6cf7;
+            background: linear-gradient(135deg, #4a6cf7 0%, #5a7cfa 100%);
             color: white;
-            padding: 20px;
+            padding: 30px 20px;
             text-align: center;
-            border-radius: 5px 5px 0 0;
         }
         .content {
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-top: none;
-            border-radius: 0 0 5px 5px;
+            padding: 30px 20px;
         }
         .footer {
-            margin-top: 20px;
+            background-color: #f8f9fa;
+            padding: 20px;
             text-align: center;
             font-size: 12px;
             color: #777;
+            border-top: 1px solid #e9ecef;
         }
         h1 {
             margin: 0;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: 600;
         }
         h2 {
-            font-size: 18px;
-            margin-top: 20px;
+            font-size: 20px;
+            margin-top: 25px;
+            margin-bottom: 15px;
             color: #4a6cf7;
+            font-weight: 600;
         }
         .section {
             background-color: #f9f9f9;
@@ -70,14 +78,19 @@
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Nouvelle Activité sur DevsAI</h1>
-    </div>
+    <div class="email-container">
+        <div class="header">
+            <h1>🚀 Nouvelle Activité sur DevsAI</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9; font-size: 16px;">Un nouveau projet vient d'être soumis</p>
+        </div>
 
-    <div class="content">
-        <p>Bonjour {{ $admin['name'] }},</p>
+        <div class="content">
+            <p style="font-size: 16px; margin-bottom: 20px;">Bonjour {{ $admin['name'] }},</p>
 
-        <p>Un utilisateur <span class="highlight">{{ $userName }}</span> vient de se connecter à la plateforme DevsAI et a soumis une nouvelle réponse.</p>
+            <p style="font-size: 16px; margin-bottom: 25px;">
+                Un utilisateur <span class="highlight">{{ $userName }}</span> vient de se connecter à la plateforme DevsAI et a soumis une nouvelle réponse.
+                <span class="status-badge">Nouveau</span>
+            </p>
 
         <div class="section">
             <h2>Détails de l'Utilisateur</h2>
@@ -128,9 +141,10 @@
         <a href="{{ url('/client-response/' . $clientResponse->id) }}" class="btn" style="background-color: #34D399;">Voir les détails sur la plateforme</a>
     </div>
 
-    <div class="footer">
-        <p>© {{ date('Y') }} DevsAI. Tous droits réservés.</p>
-        <p>Vous pouvez répondre directement à cet email pour contacter l'utilisateur.</p>
+        <div class="footer">
+            <p>© {{ date('Y') }} DevsAI. Tous droits réservés.</p>
+            <p>Vous pouvez répondre directement à cet email pour contacter l'utilisateur.</p>
+        </div>
     </div>
 </body>
 </html>

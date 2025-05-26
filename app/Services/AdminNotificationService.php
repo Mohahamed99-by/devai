@@ -108,12 +108,45 @@ class AdminNotificationService
 
             if ($result) {
                 Log::info('Email de notification unifié envoyé avec succès', [
-                    'client_response_id' => $clientResponse->id
+                    'client_response_id' => $clientResponse->id,
+                    'recipient' => $this->adminEmail,
+                    'sender' => $userEmail,
+                    'subject' => $subject,
+                    'project_type' => $clientResponse->project_type,
+                    'has_ai_analysis' => !empty($clientResponse->ai_analysis_summary),
+                    'timestamp' => now()->toISOString()
                 ]);
             } else {
                 Log::warning('Échec de l\'envoi de l\'email de notification unifié', [
-                    'client_response_id' => $clientResponse->id
+                    'client_response_id' => $clientResponse->id,
+                    'recipient' => $this->adminEmail,
+                    'sender' => $userEmail,
+                    'subject' => $subject,
+                    'timestamp' => now()->toISOString()
                 ]);
+
+                // Tentative de retry après 5 secondes
+                sleep(5);
+                $retryResult = $this->mailService->sendEmail(
+                    $this->adminEmail,
+                    '[RETRY] ' . $subject,
+                    $emailContent,
+                    $userEmail,
+                    $userName,
+                    $userEmail,
+                    $userName
+                );
+
+                if ($retryResult) {
+                    Log::info('Email de notification unifié envoyé avec succès après retry', [
+                        'client_response_id' => $clientResponse->id
+                    ]);
+                    $result = true;
+                } else {
+                    Log::error('Échec définitif de l\'envoi de l\'email de notification unifié après retry', [
+                        'client_response_id' => $clientResponse->id
+                    ]);
+                }
             }
 
             return $result;
