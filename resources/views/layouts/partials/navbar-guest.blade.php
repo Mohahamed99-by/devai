@@ -8,38 +8,48 @@
 </style>
 @endpush
 
-<nav class="bg-white/90 backdrop-blur-md shadow-soft sticky top-0 z-50 border-b border-dark-100/10">
-    <div class="container mx-auto px-6 py-4">
-        <div class="flex justify-between items-center">
+<nav class="bg-white/90 backdrop-blur-md shadow-soft sticky top-0 z-50 border-b border-dark-100/10" x-data="{ mobileMenuOpen: false }">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 sm:h-20">
             <!-- Logo with Icon -->
-            <a href="{{ url('/') }}" class="flex items-center group">
-                <img src="{{ asset('images/logo-devsai-with-icon.svg') }}" alt="DevsAI Logo" class="h-10 transition-all duration-300 group-hover:scale-105">
+            <a href="{{ url('/') }}" class="flex items-center group flex-shrink-0">
+                <img src="{{ asset('images/logo-devsai-with-icon.svg') }}" alt="DevsAI Logo" class="h-8 sm:h-10 transition-all duration-300 group-hover:scale-105">
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden md:flex items-center space-x-6">
-                <a href="#how-it-works" class="text-dark-700 hover:text-primary-600 font-medium px-4 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200">
+            <div class="hidden lg:flex items-center space-x-2 xl:space-x-6">
+                <a href="#how-it-works" class="text-dark-700 hover:text-primary-600 font-medium px-3 xl:px-4 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200 text-sm xl:text-base whitespace-nowrap">
                     How It Works
                 </a>
-                <a href="#pricing" class="text-dark-700 hover:text-primary-600 font-medium px-4 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200">
+                <a href="#pricing" class="text-dark-700 hover:text-primary-600 font-medium px-3 xl:px-4 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200 text-sm xl:text-base">
                     Pricing
                 </a>
-                <a href="{{ route('login') }}" class="text-dark-700 hover:text-primary-600 font-medium px-4 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200">
+                <a href="{{ route('login') }}" class="text-dark-700 hover:text-primary-600 font-medium px-3 xl:px-4 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200 text-sm xl:text-base">
                     Login
                 </a>
-                <a href="{{ route('register') }}" class="group relative overflow-hidden bg-primary-600 text-white px-6 py-2 rounded-xl shadow-colored hover:shadow-colored-lg hover:-translate-y-1 transition-all duration-300">
+                <a href="{{ route('register') }}" class="group relative overflow-hidden bg-primary-600 text-white px-4 xl:px-6 py-2 rounded-xl shadow-colored hover:shadow-colored-lg hover:-translate-y-1 transition-all duration-300 text-sm xl:text-base whitespace-nowrap">
                     <span class="relative z-10">Sign Up</span>
                     <div class="absolute inset-0 bg-gradient-to-r from-primary-600 via-secondary-500 to-primary-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-[length:200%_auto] animate-shine"></div>
                 </a>
             </div>
 
+            <!-- Tablet Menu (md to lg) -->
+            <div class="hidden md:flex lg:hidden items-center space-x-2">
+                <a href="{{ route('login') }}" class="text-dark-700 hover:text-primary-600 font-medium px-3 py-2 rounded-xl hover:bg-primary-50 transition-all duration-200 text-sm">
+                    Login
+                </a>
+                <a href="{{ route('register') }}" class="bg-primary-600 text-white px-4 py-2 rounded-xl shadow-colored hover:shadow-colored-lg transition-all duration-300 text-sm">
+                    Sign Up
+                </a>
+            </div>
+
             <!-- Mobile Menu Button -->
             <div class="md:hidden">
-                <button x-data="{ open: false }" @click="open = !open" class="p-3 hover:bg-primary-50 rounded-xl transition-all duration-200">
-                    <svg class="h-6 w-6 text-dark-700" x-show="!open" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 hover:bg-primary-50 rounded-xl transition-all duration-200">
+                    <svg class="h-6 w-6 text-dark-700" x-show="!mobileMenuOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
-                    <svg class="h-6 w-6 text-dark-700" x-show="open" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-6 w-6 text-dark-700" x-show="mobileMenuOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -47,7 +57,7 @@
         </div>
 
         <!-- Mobile Menu -->
-        <div class="md:hidden" x-data="{ open: false }" x-show="open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-4">
+        <div class="md:hidden" x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform -translate-y-4" x-transition:enter-end="opacity-100 transform translate-y-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform translate-y-0" x-transition:leave-end="opacity-0 transform -translate-y-4">
             <div class="px-4 pt-4 pb-6 mt-2 bg-white/95 backdrop-blur-lg shadow-soft rounded-3xl border border-dark-100/10 space-y-2">
                 <a href="#how-it-works" class="block px-4 py-3 text-dark-700 hover:bg-primary-50 hover:text-primary-600 rounded-xl transition-all duration-200">
                     <div class="flex items-center">
