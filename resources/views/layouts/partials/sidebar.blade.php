@@ -92,7 +92,7 @@
 
 <!-- Mobile sidebar toggle -->
 <div class="md:hidden fixed bottom-4 right-4 z-50">
-    <button id="sidebarToggle" class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white p-3 rounded-full shadow-lg">
+    <button id="adminSidebarToggle" class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white p-3 rounded-full shadow-lg">
         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -100,8 +100,8 @@
 </div>
 
 <!-- Mobile sidebar -->
-<div id="mobileSidebar" class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm z-40 hidden">
-    <div class="bg-gradient-to-b from-indigo-900 to-indigo-800 text-white w-72 min-h-screen py-6 transform -translate-x-full transition-transform duration-300" id="sidebarContent">
+<div id="adminMobileSidebar" class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm z-40 hidden">
+    <div class="bg-gradient-to-b from-indigo-900 to-indigo-800 text-white w-72 min-h-screen py-6 transform -translate-x-full transition-transform duration-300" id="adminSidebarContent">
         <div class="px-6">
             <div class="flex justify-between items-center mb-8">
                 <div class="flex items-center">
@@ -112,7 +112,7 @@
                     </div>
                     <h2 class="text-2xl font-bold">DevsAI</h2>
                 </div>
-                <button id="closeSidebar" class="text-white p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
+                <button id="adminCloseSidebar" class="text-white p-2 rounded-lg hover:bg-white hover:bg-opacity-10">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -203,34 +203,58 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const mobileSidebar = document.getElementById('mobileSidebar');
-        const sidebarContent = document.getElementById('sidebarContent');
-        const closeSidebar = document.getElementById('closeSidebar');
+    // Admin Sidebar Namespace
+    (function() {
+        'use strict';
 
-        sidebarToggle.addEventListener('click', function() {
-            mobileSidebar.classList.remove('hidden');
-            setTimeout(() => {
-                sidebarContent.classList.remove('-translate-x-full');
-            }, 50);
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            // Admin sidebar functionality
+            const adminSidebarToggle = document.getElementById('adminSidebarToggle');
+            const adminMobileSidebar = document.getElementById('adminMobileSidebar');
+            const adminSidebarContent = document.getElementById('adminSidebarContent');
+            const adminCloseSidebar = document.getElementById('adminCloseSidebar');
 
-        closeSidebar.addEventListener('click', function() {
-            sidebarContent.classList.add('-translate-x-full');
-            setTimeout(() => {
-                mobileSidebar.classList.add('hidden');
-            }, 300);
-        });
-
-        mobileSidebar.addEventListener('click', function(e) {
-            if (e.target === mobileSidebar) {
-                sidebarContent.classList.add('-translate-x-full');
+        // Function to open admin sidebar
+        function openAdminSidebar() {
+            if (adminMobileSidebar) {
+                adminMobileSidebar.classList.remove('hidden');
                 setTimeout(() => {
-                    mobileSidebar.classList.add('hidden');
+                    if (adminSidebarContent) {
+                        adminSidebarContent.classList.remove('-translate-x-full');
+                    }
+                }, 50);
+            }
+        }
+
+        // Function to close admin sidebar
+        function closeAdminSidebar() {
+            if (adminSidebarContent) {
+                adminSidebarContent.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    if (adminMobileSidebar) {
+                        adminMobileSidebar.classList.add('hidden');
+                    }
                 }, 300);
             }
+        }
+
+        // Event listeners for admin sidebar
+        if (adminSidebarToggle) {
+            adminSidebarToggle.addEventListener('click', openAdminSidebar);
+        }
+
+        if (adminCloseSidebar) {
+            adminCloseSidebar.addEventListener('click', closeAdminSidebar);
+        }
+
+        if (adminMobileSidebar) {
+            adminMobileSidebar.addEventListener('click', function(e) {
+                if (e.target === adminMobileSidebar) {
+                    closeAdminSidebar();
+                }
+            });
+        }
         });
-    });
+    })(); // Fin du namespace Admin Sidebar
 </script>
 @endpush

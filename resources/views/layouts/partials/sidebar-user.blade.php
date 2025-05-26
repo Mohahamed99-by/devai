@@ -13,7 +13,7 @@
             <h2 class="text-2xl font-display font-bold bg-gradient-to-r from-white to-primary-200 bg-clip-text text-transparent">DevsAI</h2>
         </div>
 
-      
+
 
         <div class="mb-8">
             <div class="text-xs uppercase text-primary-300 font-semibold tracking-wider mb-3">
@@ -82,7 +82,7 @@
 
 <!-- Mobile sidebar toggle -->
 <div class="md:hidden fixed bottom-6 right-6 z-50">
-    <button id="sidebarToggle" class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white p-4 rounded-full shadow-xl hover:shadow-colored-lg transition-all duration-300 transform hover:scale-105 pulse-animation">
+    <button id="userSidebarToggle" class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white p-4 rounded-full shadow-xl hover:shadow-colored-lg transition-all duration-300 transform hover:scale-105 pulse-animation">
         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
@@ -90,8 +90,8 @@
 </div>
 
 <!-- Mobile sidebar -->
-<div id="mobileSidebar" class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm z-40 hidden">
-    <div class="bg-gradient-to-b from-primary-900 to-primary-800 text-white w-80 min-h-screen py-6 transform -translate-x-full transition-transform duration-300 shadow-2xl relative overflow-hidden" id="sidebarContent">
+<div id="userMobileSidebar" class="fixed inset-0 bg-gray-900 bg-opacity-50 backdrop-blur-sm z-40 hidden">
+    <div class="bg-gradient-to-b from-primary-900 to-primary-800 text-white w-80 min-h-screen py-6 transform -translate-x-full transition-transform duration-300 shadow-2xl relative overflow-hidden" id="userSidebarContent">
         <!-- Decorative elements -->
         <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-secondary-500/10 to-accent-500/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
         <div class="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-accent-500/10 to-secondary-500/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl"></div>
@@ -106,7 +106,7 @@
                     </div>
                     <h2 class="text-2xl font-display font-bold bg-gradient-to-r from-white to-primary-200 bg-clip-text text-transparent">DevsAI</h2>
                 </div>
-                <button id="closeSidebar" class="text-white p-2 rounded-lg hover:bg-white/10 transition-colors duration-200">
+                <button id="userCloseSidebar" class="text-white p-2 rounded-lg hover:bg-white/10 transition-colors duration-200">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -194,62 +194,75 @@
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebarToggle = document.getElementById('sidebarToggle');
-        const mobileSidebar = document.getElementById('mobileSidebar');
-        const sidebarContent = document.getElementById('sidebarContent');
-        const closeSidebar = document.getElementById('closeSidebar');
+    // User Sidebar Namespace
+    (function() {
+        'use strict';
 
-        // Function to open sidebar with animation
-        function openSidebar() {
-            // First make the backdrop visible
-            mobileSidebar.classList.remove('hidden');
+        document.addEventListener('DOMContentLoaded', function() {
+            // User sidebar functionality
+            const userSidebarToggle = document.getElementById('userSidebarToggle');
+            const userMobileSidebar = document.getElementById('userMobileSidebar');
+            const userSidebarContent = document.getElementById('userSidebarContent');
+            const userCloseSidebar = document.getElementById('userCloseSidebar');
 
-            // Then animate the sidebar after a small delay
-            setTimeout(() => {
-                sidebarContent.classList.remove('-translate-x-full');
+        // Function to open user sidebar with animation
+        function openUserSidebar() {
+            if (userMobileSidebar) {
+                // First make the backdrop visible
+                userMobileSidebar.classList.remove('hidden');
 
-                // Add entrance animation classes to menu items
-                const menuItems = sidebarContent.querySelectorAll('nav ul li');
-                menuItems.forEach((item, index) => {
-                    item.style.opacity = '0';
-                    item.style.transform = 'translateX(-20px)';
+                // Then animate the sidebar after a small delay
+                setTimeout(() => {
+                    if (userSidebarContent) {
+                        userSidebarContent.classList.remove('-translate-x-full');
 
-                    setTimeout(() => {
-                        item.style.transition = 'all 0.3s ease';
-                        item.style.opacity = '1';
-                        item.style.transform = 'translateX(0)';
-                    }, 100 + (index * 50));
-                });
-            }, 50);
+                        // Add entrance animation classes to menu items
+                        const menuItems = userSidebarContent.querySelectorAll('nav ul li');
+                        menuItems.forEach((item, index) => {
+                            item.style.opacity = '0';
+                            item.style.transform = 'translateX(-20px)';
+
+                            setTimeout(() => {
+                                item.style.transition = 'all 0.3s ease';
+                                item.style.opacity = '1';
+                                item.style.transform = 'translateX(0)';
+                            }, 100 + (index * 50));
+                        });
+                    }
+                }, 50);
+            }
         }
 
-        // Function to close sidebar with animation
-        function closeSidebar() {
-            // First animate the sidebar out
-            sidebarContent.classList.add('-translate-x-full');
+        // Function to close user sidebar with animation
+        function closeUserSidebar() {
+            if (userSidebarContent) {
+                // First animate the sidebar out
+                userSidebarContent.classList.add('-translate-x-full');
 
-            // Then hide the backdrop after animation completes
-            setTimeout(() => {
-                mobileSidebar.classList.add('hidden');
-            }, 300);
+                // Then hide the backdrop after animation completes
+                setTimeout(() => {
+                    if (userMobileSidebar) {
+                        userMobileSidebar.classList.add('hidden');
+                    }
+                }, 300);
+            }
         }
 
-        // Event listeners
-        if (sidebarToggle) {
-            sidebarToggle.addEventListener('click', openSidebar);
+        // Event listeners for user sidebar
+        if (userSidebarToggle) {
+            userSidebarToggle.addEventListener('click', openUserSidebar);
         }
 
-        if (closeSidebar) {
-            closeSidebar.addEventListener('click', function() {
-                closeSidebar();
+        if (userCloseSidebar) {
+            userCloseSidebar.addEventListener('click', function() {
+                closeUserSidebar();
             });
         }
 
-        if (mobileSidebar) {
-            mobileSidebar.addEventListener('click', function(e) {
-                if (e.target === mobileSidebar) {
-                    closeSidebar();
+        if (userMobileSidebar) {
+            userMobileSidebar.addEventListener('click', function(e) {
+                if (e.target === userMobileSidebar) {
+                    closeUserSidebar();
                 }
             });
         }
@@ -265,6 +278,7 @@
                 link.classList.add('active');
             }
         });
-    });
+        });
+    })(); // Fin du namespace User Sidebar
 </script>
 @endpush
