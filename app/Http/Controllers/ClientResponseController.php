@@ -127,14 +127,18 @@ class ClientResponseController extends Controller
 
             // Get AI analysis
             try {
+                Log::info('Début de l\'analyse IA pour la réponse client ID: ' . $clientResponse->id);
                 $aiAnalysis = $this->openAIService->analyzeProjectRequirements($validatedData);
 
                 if (isset($aiAnalysis['error'])) {
                     Log::error('AI Analysis Error: ' . $aiAnalysis['message']);
-                    // Continuer le processus même si l'analyse AI échoue
-                } else {
-                    // Update the client response with AI analysis
-                    $clientResponse->update([
+                    // Utiliser des données par défaut si l'analyse échoue
+                    $aiAnalysis = $this->getDefaultAnalysis($validatedData);
+                }
+
+                // Sauvegarder l'analyse IA
+                try {
+                    $updateData = [
                         'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
                         'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
                         'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
@@ -143,11 +147,25 @@ class ClientResponseController extends Controller
                         'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
                         'ai_recommendations' => $aiAnalysis['ai_recommendations'] ?? [],
                         'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
-                    ]);
+                    ];
+
+                    $clientResponse->update($updateData);
+                    Log::info('Analyse IA sauvegardée avec succès pour la réponse client ID: ' . $clientResponse->id);
+
+                } catch (\Exception $dbError) {
+                    Log::error('Erreur lors de la sauvegarde de l\'analyse IA: ' . $dbError->getMessage());
+
+                    // Stocker temporairement les données en session si la DB échoue
+                    Session::put('temp_ai_analysis_' . $clientResponse->id, $aiAnalysis);
+                    Log::info('Analyse IA stockée temporairement en session');
                 }
+
             } catch (\Exception $e) {
-                // Enregistrer l'erreur mais ne pas interrompre le processus
                 Log::error('Erreur lors de l\'analyse IA: ' . $e->getMessage());
+
+                // Utiliser des données par défaut et les stocker en session
+                $defaultAnalysis = $this->getDefaultAnalysis($validatedData);
+                Session::put('temp_ai_analysis_' . $clientResponse->id, $defaultAnalysis);
             }
 
             // Envoyer un seul e-mail de notification à l'administrateur
