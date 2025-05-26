@@ -151,6 +151,61 @@
                         @endif
                     </div>
 
+                    @php
+                        $detailedAnalysis = $clientResponse->ai_detailed_analysis ?? [];
+                        $detailedAnalysis = is_array($detailedAnalysis) ? $detailedAnalysis : [];
+                    @endphp
+                    @if(!empty($detailedAnalysis))
+                    <div>
+                        <h3 class="font-semibold text-blue-700">Analyse Détaillée</h3>
+                        <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                            @if(!empty($detailedAnalysis['strengths']))
+                            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+                                <h4 class="font-medium text-green-700 mb-2">Points Forts</h4>
+                                <ul class="list-disc list-inside text-sm text-green-800">
+                                    @foreach($detailedAnalysis['strengths'] as $strength)
+                                        <li>{{ $strength }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
+                            @if(!empty($detailedAnalysis['challenges']))
+                            <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+                                <h4 class="font-medium text-red-700 mb-2">Défis</h4>
+                                <ul class="list-disc list-inside text-sm text-red-800">
+                                    @foreach($detailedAnalysis['challenges'] as $challenge)
+                                        <li>{{ $challenge }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
+                            @if(!empty($detailedAnalysis['opportunities']))
+                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                                <h4 class="font-medium text-blue-700 mb-2">Opportunités</h4>
+                                <ul class="list-disc list-inside text-sm text-blue-800">
+                                    @foreach($detailedAnalysis['opportunities'] as $opportunity)
+                                        <li>{{ $opportunity }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
+                            @if(!empty($detailedAnalysis['risks']))
+                            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                                <h4 class="font-medium text-yellow-700 mb-2">Risques</h4>
+                                <ul class="list-disc list-inside text-sm text-yellow-800">
+                                    @foreach($detailedAnalysis['risks'] as $risk)
+                                        <li>{{ $risk }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+                    @endif
+
                     <div>
                         <h3 class="font-semibold text-blue-700">Technologies Recommandées</h3>
                         @php
@@ -158,11 +213,37 @@
                             $technologies = is_array($technologies) ? $technologies : [];
                         @endphp
                         @if(count($technologies) > 0)
-                            <ul class="mt-1 list-disc list-inside">
-                                @foreach($technologies as $tech)
-                                    <li>{{ $tech }}</li>
+                            <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @php
+                                    $techCategories = [];
+                                    foreach ($technologies as $tech) {
+                                        if (preg_match('/\[(.*?)\]\s*(.*)/', $tech, $matches)) {
+                                            $category = $matches[1];
+                                            $techName = $matches[2];
+                                            if (!isset($techCategories[$category])) {
+                                                $techCategories[$category] = [];
+                                            }
+                                            $techCategories[$category][] = $techName;
+                                        } else {
+                                            if (!isset($techCategories['Autres'])) {
+                                                $techCategories['Autres'] = [];
+                                            }
+                                            $techCategories['Autres'][] = $tech;
+                                        }
+                                    }
+                                @endphp
+
+                                @foreach($techCategories as $category => $techs)
+                                <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-200">
+                                    <h4 class="font-medium text-indigo-700 mb-2">{{ ucfirst($category) }}</h4>
+                                    <ul class="list-disc list-inside text-sm text-indigo-800">
+                                        @foreach($techs as $tech)
+                                            <li>{{ $tech }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
                                 @endforeach
-                            </ul>
+                            </div>
                         @else
                             <p class="mt-1 text-gray-500">Aucune technologie suggérée</p>
                         @endif
@@ -175,11 +256,43 @@
                             $features = is_array($features) ? $features : [];
                         @endphp
                         @if(count($features) > 0)
-                            <ul class="mt-1 list-disc list-inside">
-                                @foreach($features as $feature)
-                                    <li>{{ $feature }}</li>
-                                @endforeach
-                            </ul>
+                            @if(isset($features[0]) && is_array($features[0]) && isset($features[0]['name']))
+                                <!-- Detailed features format -->
+                                <div class="mt-3 space-y-4">
+                                    @foreach($features as $feature)
+                                        <div class="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
+                                            <div class="flex items-center justify-between">
+                                                <h4 class="font-medium text-gray-800">{{ $feature['name'] }}</h4>
+                                                @php
+                                                    $priorityColor = 'bg-gray-100 text-gray-800';
+                                                    if (isset($feature['priority'])) {
+                                                        if (strtolower($feature['priority']) === 'high') {
+                                                            $priorityColor = 'bg-red-100 text-red-800';
+                                                        } elseif (strtolower($feature['priority']) === 'medium') {
+                                                            $priorityColor = 'bg-yellow-100 text-yellow-800';
+                                                        } elseif (strtolower($feature['priority']) === 'low') {
+                                                            $priorityColor = 'bg-green-100 text-green-800';
+                                                        }
+                                                    }
+                                                @endphp
+                                                <span class="px-2 py-1 text-xs rounded-full {{ $priorityColor }}">
+                                                    {{ $feature['priority'] ?? 'Priorité non définie' }}
+                                                </span>
+                                            </div>
+                                            @if(isset($feature['description']))
+                                                <p class="mt-2 text-sm text-gray-600">{{ $feature['description'] }}</p>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <!-- Simple features list -->
+                                <ul class="mt-1 list-disc list-inside">
+                                    @foreach($features as $feature)
+                                        <li>{{ $feature }}</li>
+                                    @endforeach
+                                </ul>
+                            @endif
                         @else
                             <p class="mt-1 text-gray-500">Aucune fonctionnalité suggérée</p>
                         @endif
@@ -192,25 +305,63 @@
                             $factors = is_array($factors) ? $factors : [];
                         @endphp
                         @if(count($factors) > 0)
-                            <ul class="mt-1 list-disc list-inside">
+                            <div class="mt-3 space-y-3">
                                 @foreach($factors as $factor)
-                                    <li>{{ $factor }}</li>
+                                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+                                        @if(strpos($factor, ' - Impact:') !== false)
+                                            @php
+                                                list($factorName, $rest) = explode(' - Impact:', $factor, 2);
+                                                $impact = '';
+                                                $mitigation = '';
+
+                                                if (strpos($rest, ' - Mitigation:') !== false) {
+                                                    list($impact, $mitigation) = explode(' - Mitigation:', $rest, 2);
+                                                } else {
+                                                    $impact = $rest;
+                                                }
+                                            @endphp
+                                            <h4 class="font-medium text-orange-800">{{ trim($factorName) }}</h4>
+                                            <p class="mt-1 text-sm text-orange-700"><span class="font-medium">Impact:</span> {{ trim($impact) }}</p>
+                                            @if($mitigation)
+                                                <p class="mt-1 text-sm text-orange-700"><span class="font-medium">Stratégie d'atténuation:</span> {{ trim($mitigation) }}</p>
+                                            @endif
+                                        @else
+                                            <p class="text-orange-800">{{ $factor }}</p>
+                                        @endif
+                                    </div>
                                 @endforeach
-                            </ul>
+                            </div>
                         @else
                             <p class="mt-1 text-gray-500">Aucun facteur de complexité identifié</p>
                         @endif
                     </div>
 
+                    @php
+                        $recommendations = $clientResponse->ai_recommendations ?? [];
+                        $recommendations = is_array($recommendations) ? $recommendations : [];
+                    @endphp
+                    @if(count($recommendations) > 0)
+                    <div>
+                        <h3 class="font-semibold text-blue-700">Recommandations</h3>
+                        <div class="mt-3 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            <ul class="list-disc list-inside text-blue-800 space-y-2">
+                                @foreach($recommendations as $recommendation)
+                                    <li>{{ $recommendation }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    @endif
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6 pt-4 border-t">
-                        <div class="bg-blue-50 p-4 rounded-lg">
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-lg shadow-sm border border-blue-100">
                             <h3 class="font-semibold text-blue-700">Délai Estimé</h3>
-                            <p class="mt-1 text-2xl font-bold">{{ $clientResponse->ai_estimated_duration }}</p>
+                            <p class="mt-1 text-2xl font-bold text-blue-800">{{ $clientResponse->ai_estimated_duration ?: 'Non estimé' }}</p>
                         </div>
 
-                        <div class="bg-blue-50 p-4 rounded-lg">
-                            <h3 class="font-semibold text-blue-700">Budget Estimé</h3>
-                            <p class="mt-1 text-2xl font-bold">${{ number_format($clientResponse->ai_cost_estimate, 2) }}</p>
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-lg shadow-sm border border-green-100">
+                            <h3 class="font-semibold text-green-700">Budget Estimé</h3>
+                            <p class="mt-1 text-2xl font-bold text-green-800">{{ $clientResponse->ai_cost_estimate ? number_format($clientResponse->ai_cost_estimate, 2) . ' €' : 'Non estimé' }}</p>
                         </div>
                     </div>
 

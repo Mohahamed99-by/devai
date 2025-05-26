@@ -6,78 +6,204 @@
 <style>
     .step-content {
         display: none;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
     }
     .step-content.active {
         display: block;
+        opacity: 1;
+        transform: translateY(0);
     }
     .form-progress-bar {
-        height: 4px;
-        background-color: #e5e7eb;
+        height: 8px;
+        background-color: #f3f4f6;
         border-radius: 9999px;
         overflow: hidden;
+        box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
     }
     .form-progress-bar-inner {
         height: 100%;
-        background-color: #4f46e5;
-        transition: width 0.3s ease;
+        background: linear-gradient(90deg, var(--tw-gradient-stops));
+        --tw-gradient-from: #4f46e5;
+        --tw-gradient-to: #a855f7;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+        transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .card-gradient {
+        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+    }
+    .btn-gradient {
+        background: linear-gradient(90deg, var(--tw-gradient-stops));
+        --tw-gradient-from: #4f46e5;
+        --tw-gradient-to: #a855f7;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -1px rgba(79, 70, 229, 0.1);
+    }
+    .btn-gradient:hover {
+        --tw-gradient-from: #4338ca;
+        --tw-gradient-to: #9333ea;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3), 0 4px 6px -2px rgba(79, 70, 229, 0.15);
+    }
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+        }
+    }
+    .form-input {
+        transition: all 0.3s ease;
+        border-color: #e5e7eb;
+        border-radius: 0.75rem;
+    }
+    .form-input:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        transform: translateY(-1px);
+    }
+    .form-label {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    .form-hint {
+        font-size: 0.75rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    .checkbox-item {
+        transition: all 0.2s ease;
+    }
+    .checkbox-item:hover {
+        background-color: rgba(99, 102, 241, 0.05);
+        border-radius: 0.5rem;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.5s ease forwards;
     }
 </style>
 @endpush
 
 @section('content')
-<div class="container mx-auto px-4 py-8">
+<div class="container mx-auto px-4 py-6 sm:py-8 md:py-12">
     <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h1 class="text-3xl font-bold mb-4">Générateur de Fiche Technique</h1>
-            <p class="text-gray-600 mb-2">Bienvenue dans notre outil d'analyse automatisée de projets. Ce questionnaire intelligent nous aidera à comprendre vos besoins.</p>
-            <p class="text-gray-600">Après soumission, notre IA analysera vos exigences et générera une fiche technique détaillée incluant les fonctionnalités suggérées, les technologies recommandées et une estimation de délai de développement.</p>
+        <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 border border-gray-100 animate-fade-in">
+            <div class="flex flex-col sm:flex-row sm:items-center mb-6 sm:mb-8">
+                <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl flex items-center justify-center mb-3 sm:mb-0 sm:mr-5 shadow-md mx-auto sm:mx-0 transform transition-transform duration-300 hover:scale-105">
+                    <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent text-center sm:text-left">Générateur de Fiche Technique</h1>
+                    <p class="text-dark-500 text-center sm:text-left mt-1 text-sm sm:text-base">Obtenez une analyse détaillée de votre projet en quelques minutes</p>
+                </div>
+            </div>
 
-            <div class="mt-8">
-                <button type="button" onclick="openModal('project-form-modal')" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <div class="card-gradient p-4 sm:p-5 md:p-7 mb-6 sm:mb-8 relative overflow-hidden">
+                <!-- Decorative elements -->
+                <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+
+                <p class="text-dark-700 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base relative">Bienvenue dans notre outil d'analyse automatisée de projets. Ce questionnaire intelligent nous aidera à comprendre vos besoins.</p>
+                <p class="text-dark-700 leading-relaxed text-sm sm:text-base relative">Après soumission, notre <span class="font-semibold text-primary-600">IA</span> analysera vos exigences et générera une fiche technique détaillée incluant les fonctionnalités suggérées, les technologies recommandées et une estimation de délai de développement.</p>
+            </div>
+
+            <div class="flex flex-col items-center mt-6 sm:mt-8 md:mt-10">
+                <button type="button" onclick="openModal('project-form-modal')" class="btn-gradient text-white px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl flex items-center pulse-animation w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
-                    Commencer le questionnaire
+                    <span class="text-sm sm:text-base md:text-lg font-medium">Commencer le questionnaire</span>
                 </button>
+                <p class="text-xs sm:text-sm text-dark-500 mt-3 sm:mt-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Cela ne prendra que quelques minutes
+                </p>
             </div>
         </div>
     </div>
 </div>
 
-<x-modal id="project-form-modal" maxWidth="4xl">
-    <div class="p-6">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">Questionnaire de Projet</h2>
-            <button type="button" onclick="closeModal('project-form-modal')" class="text-gray-400 hover:text-gray-500">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
-        </div>
+<x-modal id="project-form-modal" maxWidth="5xl">
+    <div class="p-4 sm:p-6 md:p-8 lg:p-10 bg-gradient-to-br from-white to-gray-50 overflow-y-auto max-h-[90vh] md:max-h-screen relative">
+        <!-- Decorative elements - hidden on very small screens -->
+        <div class="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none hidden sm:block"></div>
+        <div class="absolute bottom-0 left-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-tr from-secondary-500/5 to-accent-500/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none hidden sm:block"></div>
 
-        <div class="mb-6">
-            <div class="form-progress-bar">
-                <div class="form-progress-bar-inner" id="progressBar" style="width: 20%"></div>
+        <div class="relative">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
+                <div class="flex items-center mb-4 sm:mb-0 w-full sm:w-auto">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-md transform transition-transform duration-300 hover:scale-105">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-lg sm:text-xl md:text-2xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Questionnaire de Projet</h2>
+                        <p class="text-dark-500 text-xs sm:text-sm">Partagez les détails de votre projet pour obtenir une analyse personnalisée</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeModal('project-form-modal')" class="text-dark-400 hover:text-dark-600 transition-colors duration-200 p-2 rounded-xl hover:bg-dark-50 absolute top-2 right-2 sm:top-4 sm:right-4 md:static">
+                    <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-        </div>
 
-        <div id="formStepsContainer">
-            <!-- Les étapes seront générées dynamiquement par JavaScript -->
-        </div>
+            <div class="mb-6 sm:mb-8">
+                <div class="form-progress-bar">
+                    <div class="form-progress-bar-inner" id="progressBar" style="width: 20%"></div>
+                </div>
+                <div class="flex justify-between text-xs text-dark-500 mt-2 px-1">
+                    <span class="text-[10px] sm:text-xs">Début</span>
+                    <span class="text-[10px] sm:text-xs">Progression</span>
+                    <span class="text-[10px] sm:text-xs">Fin</span>
+                </div>
+            </div>
 
-        <form id="projectForm" class="mt-6">
+            <div id="formStepsContainer" class="mb-4 sm:mb-6 flex justify-center">
+                <!-- Les étapes seront générées dynamiquement par JavaScript -->
+            </div>
+
+        <form id="projectForm" class="mt-4 sm:mt-6 md:mt-8 bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-soft border border-gray-100">
             @csrf
 
             <!-- Step 1: Informations de Base -->
             <div class="step-content active" data-step="1">
-                <h3 class="text-xl font-semibold mb-4 pb-2 border-b">Informations de Base</h3>
+                <div class="flex items-center mb-5 pb-3 border-b border-primary-100">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-xl flex items-center justify-center mr-3 text-primary-600 font-bold text-base sm:text-lg shadow-sm">1</div>
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-display font-semibold text-dark-800">Informations de Base</h3>
+                        <p class="text-dark-500 text-xs sm:text-sm">Commençons par les informations essentielles de votre projet</p>
+                    </div>
+                </div>
 
                 <!-- Project Type -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
-                        Type de Projet *
+                <div class="mb-6 sm:mb-8">
+                    <label class="form-label text-sm sm:text-base">
+                        Type de Projet <span class="text-primary-600">*</span>
                     </label>
-                    <select name="project_type" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" required>
+                    <select name="project_type" class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none" required>
                         <option value="">Sélectionnez un type de projet</option>
                         <option value="web">Application Web</option>
                         <option value="mobile_ios">Application Mobile - iOS</option>
@@ -89,46 +215,60 @@
                         <option value="cms">Système de Gestion de Contenu</option>
                         <option value="api">API / Service Backend</option>
                     </select>
-                    <p class="text-gray-500 text-xs mt-1">Sélectionnez la plateforme principale pour votre projet</p>
+                    <p class="form-hint">Sélectionnez la plateforme principale pour votre projet</p>
                 </div>
 
                 <!-- Project Description -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
-                        Description du Projet *
+                <div class="mb-6 sm:mb-8">
+                    <label class="form-label text-sm sm:text-base">
+                        Description du Projet <span class="text-primary-600">*</span>
                     </label>
-                    <textarea
-                        name="project_description"
-                        rows="5"
-                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Décrivez votre projet en détail. Quel problème résout-il ? Quels sont les objectifs principaux ?"
-                        required
-                        onclick="event.stopPropagation();"
-                        onfocus="this.readOnly = false;"
-                        onkeydown="event.stopPropagation();"></textarea>
-                    <p class="text-gray-500 text-xs mt-1">Soyez aussi précis que possible sur l'objectif et les buts de votre projet</p>
+                    <div class="relative">
+                        <textarea
+                            name="project_description"
+                            rows="4"
+                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            placeholder="Décrivez votre projet en détail. Quel problème résout-il ? Quels sont les objectifs principaux ?"
+                            required
+                            onclick="event.stopPropagation();"
+                            onfocus="this.readOnly = false;"
+                            onkeydown="event.stopPropagation();"></textarea>
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="form-hint">Soyez aussi précis que possible sur l'objectif et les buts de votre projet</p>
                 </div>
 
                 <!-- Similar Applications -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                <div class="mb-6 sm:mb-8">
+                    <label class="form-label text-sm sm:text-base">
                         Applications Similaires
                     </label>
-                    <textarea
-                        name="similar_applications"
-                        rows="2"
-                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Listez les applications ou sites web existants qui sont similaires à ce que vous souhaitez construire"
-                        onclick="event.stopPropagation();"
-                        onfocus="this.readOnly = false;"
-                        onkeydown="event.stopPropagation();"></textarea>
-                    <p class="text-gray-500 text-xs mt-1">Des exemples nous aident à mieux comprendre votre vision</p>
+                    <div class="relative">
+                        <textarea
+                            name="similar_applications"
+                            rows="3"
+                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            placeholder="Listez les applications ou sites web existants qui sont similaires à ce que vous souhaitez construire"
+                            onclick="event.stopPropagation();"
+                            onfocus="this.readOnly = false;"
+                            onkeydown="event.stopPropagation();"></textarea>
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="form-hint">Des exemples nous aident à mieux comprendre votre vision</p>
                 </div>
 
-                <div class="flex justify-end mt-6">
-                    <button type="button" class="next-step bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center">
-                        Suivant
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                <div class="flex justify-end mt-6 sm:mt-8">
+                    <button type="button" class="next-step btn-gradient text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-md w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1 text-sm sm:text-base">
+                        <span class="mr-2 font-medium">Suivant</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                         </svg>
                     </button>
@@ -137,76 +277,96 @@
 
             <!-- Step 2: Public Cible -->
             <div class="step-content" data-step="2">
-                <h3 class="text-xl font-semibold mb-4 pb-2 border-b">Public Cible</h3>
+                <div class="flex items-center mb-5 pb-3 border-b border-primary-100">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-xl flex items-center justify-center mr-3 text-primary-600 font-bold text-base sm:text-lg shadow-sm">2</div>
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-display font-semibold text-dark-800">Public Cible</h3>
+                        <p class="text-dark-500 text-xs sm:text-sm">Définissez qui utilisera votre application</p>
+                    </div>
+                </div>
 
                 <!-- Target Audience -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
-                        Public Cible *
+                <div class="mb-6 sm:mb-8">
+                    <label class="form-label text-sm sm:text-base">
+                        Public Cible <span class="text-primary-600">*</span>
                     </label>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex items-center">
-                            <input type="checkbox" name="target_audience[]" value="clients" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label class="ml-2 block text-gray-700">Clients / Consommateurs</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mt-2 sm:mt-3">
+                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
+                            <input type="checkbox" name="target_audience[]" value="clients" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
+                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Clients / Consommateurs</label>
                         </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" name="target_audience[]" value="businesses" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label class="ml-2 block text-gray-700">Entreprises (B2B)</label>
+                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
+                            <input type="checkbox" name="target_audience[]" value="businesses" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
+                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Entreprises (B2B)</label>
                         </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" name="target_audience[]" value="internal" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label class="ml-2 block text-gray-700">Utilisateurs internes</label>
+                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
+                            <input type="checkbox" name="target_audience[]" value="internal" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
+                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Utilisateurs internes</label>
                         </div>
-                        <div class="flex items-center">
-                            <input type="checkbox" name="target_audience[]" value="technical" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
-                            <label class="ml-2 block text-gray-700">Utilisateurs techniques</label>
+                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
+                            <input type="checkbox" name="target_audience[]" value="technical" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
+                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Utilisateurs techniques</label>
                         </div>
                     </div>
-                    <p class="text-gray-500 text-xs mt-1">Sélectionnez tous les types d'utilisateurs qui utiliseront votre application</p>
+                    <p class="form-hint">Sélectionnez tous les types d'utilisateurs qui utiliseront votre application</p>
                 </div>
 
                 <!-- User Demographics -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                <div class="mb-6 sm:mb-8">
+                    <label class="form-label text-sm sm:text-base">
                         Démographie des Utilisateurs
                     </label>
-                    <textarea
-                        name="user_demographics"
-                        rows="3"
-                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Décrivez les caractéristiques de vos utilisateurs (âge, profession, niveau technique, etc.)"
-                        onclick="event.stopPropagation();"
-                        onfocus="this.readOnly = false;"
-                        onkeydown="event.stopPropagation();"></textarea>
-                    <p class="text-gray-500 text-xs mt-1">Ces informations nous aident à adapter l'interface utilisateur</p>
+                    <div class="relative">
+                        <textarea
+                            name="user_demographics"
+                            rows="3"
+                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            placeholder="Décrivez les caractéristiques de vos utilisateurs (âge, profession, niveau technique, etc.)"
+                            onclick="event.stopPropagation();"
+                            onfocus="this.readOnly = false;"
+                            onkeydown="event.stopPropagation();"></textarea>
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="form-hint">Ces informations nous aident à adapter l'interface utilisateur</p>
                 </div>
 
                 <!-- User Expectations -->
-                <div class="mb-6">
-                    <label class="block text-gray-700 text-sm font-bold mb-2">
+                <div class="mb-6 sm:mb-8">
+                    <label class="form-label text-sm sm:text-base">
                         Attentes des Utilisateurs
                     </label>
-                    <textarea
-                        name="user_expectations"
-                        rows="3"
-                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        placeholder="Quelles sont les principales attentes de vos utilisateurs ? Quels problèmes cherchent-ils à résoudre ?"
-                        onclick="event.stopPropagation();"
-                        onfocus="this.readOnly = false;"
-                        onkeydown="event.stopPropagation();"></textarea>
-                    <p class="text-gray-500 text-xs mt-1">Comprendre les attentes nous aide à prioriser les fonctionnalités</p>
+                    <div class="relative">
+                        <textarea
+                            name="user_expectations"
+                            rows="3"
+                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            placeholder="Quelles sont les principales attentes de vos utilisateurs ? Quels problèmes cherchent-ils à résoudre ?"
+                            onclick="event.stopPropagation();"
+                            onfocus="this.readOnly = false;"
+                            onkeydown="event.stopPropagation();"></textarea>
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="form-hint">Comprendre les attentes nous aide à prioriser les fonctionnalités</p>
                 </div>
 
-                <div class="flex justify-between mt-6">
-                    <button type="button" class="prev-step bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 mt-6 sm:mt-8">
+                    <button type="button" class="prev-step bg-white border border-dark-200 text-dark-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-dark-50 transition-all duration-200 flex items-center shadow-sm justify-center sm:justify-start order-2 sm:order-1 hover:-translate-y-1 text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-dark-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
-                        Précédent
+                        <span class="font-medium">Précédent</span>
                     </button>
-                    <button type="button" class="next-step bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center">
-                        Suivant
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <button type="button" class="next-step btn-gradient text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-md justify-center sm:justify-start order-1 sm:order-2 transform transition-all duration-300 hover:-translate-y-1 text-sm sm:text-base">
+                        <span class="mr-2 font-medium">Suivant</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                         </svg>
                     </button>
@@ -215,7 +375,10 @@
 
             <!-- Step 3: Fonctionnalités -->
             <div class="step-content" data-step="3">
-                <h3 class="text-xl font-semibold mb-4 pb-2 border-b">Fonctionnalités</h3>
+                <div class="flex items-center mb-4 pb-2 border-b border-indigo-100">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 text-indigo-600 font-bold text-sm sm:text-base">3</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-800">Fonctionnalités</h3>
+                </div>
 
                 <!-- Key Features -->
                 <div class="mb-6">
@@ -265,16 +428,16 @@
                     <p class="text-gray-500 text-xs mt-1">Fonctionnalités qui seraient utiles mais non essentielles pour la première version</p>
                 </div>
 
-                <div class="flex justify-between mt-6">
-                    <button type="button" class="prev-step bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
+                    <button type="button" class="prev-step bg-white border border-gray-300 text-gray-700 px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-gray-50 transition duration-200 flex items-center shadow-sm justify-center sm:justify-start order-2 sm:order-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
-                        Précédent
+                        <span class="text-sm sm:text-base">Précédent</span>
                     </button>
-                    <button type="button" class="next-step bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center">
-                        Suivant
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <button type="button" class="next-step btn-gradient text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg flex items-center shadow-md justify-center sm:justify-start order-1 sm:order-2">
+                        <span class="mr-2 text-sm sm:text-base">Suivant</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                         </svg>
                     </button>
@@ -283,7 +446,10 @@
 
             <!-- Step 4: Contraintes -->
             <div class="step-content" data-step="4">
-                <h3 class="text-xl font-semibold mb-4 pb-2 border-b">Contraintes</h3>
+                <div class="flex items-center mb-4 pb-2 border-b border-indigo-100">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 text-indigo-600 font-bold text-sm sm:text-base">4</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-800">Contraintes</h3>
+                </div>
 
                 <!-- Budget Range -->
                 <div class="mb-6">
@@ -336,16 +502,16 @@
                     <p class="text-gray-500 text-xs mt-1">Avez-vous besoin d'un plan de maintenance après le lancement ?</p>
                 </div>
 
-                <div class="flex justify-between mt-6">
-                    <button type="button" class="prev-step bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
+                    <button type="button" class="prev-step bg-white border border-gray-300 text-gray-700 px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-gray-50 transition duration-200 flex items-center shadow-sm justify-center sm:justify-start order-2 sm:order-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
-                        Précédent
+                        <span class="text-sm sm:text-base">Précédent</span>
                     </button>
-                    <button type="button" class="next-step bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 flex items-center">
-                        Suivant
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                    <button type="button" class="next-step btn-gradient text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg flex items-center shadow-md justify-center sm:justify-start order-1 sm:order-2">
+                        <span class="mr-2 text-sm sm:text-base">Suivant</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
                         </svg>
                     </button>
@@ -354,7 +520,10 @@
 
             <!-- Step 5: Exigences Techniques -->
             <div class="step-content" data-step="5">
-                <h3 class="text-xl font-semibold mb-4 pb-2 border-b">Exigences Techniques</h3>
+                <div class="flex items-center mb-4 pb-2 border-b border-indigo-100">
+                    <div class="w-7 h-7 sm:w-8 sm:h-8 bg-indigo-100 rounded-full flex items-center justify-center mr-2 sm:mr-3 text-indigo-600 font-bold text-sm sm:text-base">5</div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-800">Exigences Techniques</h3>
+                </div>
 
                 <!-- Technical Requirements -->
                 <div class="mb-6">
@@ -430,18 +599,18 @@
                     <p class="text-gray-500 text-xs mt-1">Détails supplémentaires qui pourraient nous aider à mieux comprendre vos besoins</p>
                 </div>
 
-                <div class="flex justify-between mt-6">
-                    <button type="button" class="prev-step bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition duration-200 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8">
+                    <button type="button" class="prev-step bg-white border border-gray-300 text-gray-700 px-4 sm:px-6 py-2 sm:py-3 rounded-lg hover:bg-gray-50 transition duration-200 flex items-center shadow-sm justify-center sm:justify-start order-2 sm:order-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
-                        Précédent
+                        <span class="text-sm sm:text-base">Précédent</span>
                     </button>
-                    <button type="submit" id="submitForm" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition duration-200 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <button type="submit" id="submitForm" class="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg hover:from-green-600 hover:to-emerald-700 transition duration-200 flex items-center shadow-md transform hover:-translate-y-1 justify-center sm:justify-start order-1 sm:order-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
-                        Soumettre
+                        <span class="font-medium text-sm sm:text-base">Soumettre</span>
                     </button>
                 </div>
             </div>

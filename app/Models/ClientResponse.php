@@ -28,7 +28,9 @@ class ClientResponse extends Model
         'ai_suggested_technologies',
         'ai_estimated_duration',
         'ai_analysis_summary',
+        'ai_detailed_analysis',
         'ai_complexity_factors',
+        'ai_recommendations',
         'ai_cost_estimate',
         'status'
     ];
@@ -43,7 +45,9 @@ class ClientResponse extends Model
         'deadline' => 'date',
         'ai_suggested_features' => 'array',
         'ai_suggested_technologies' => 'array',
+        'ai_detailed_analysis' => 'array',
         'ai_complexity_factors' => 'array',
+        'ai_recommendations' => 'array',
         'ai_cost_estimate' => 'decimal:2'
     ];
 

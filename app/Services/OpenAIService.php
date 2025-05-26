@@ -12,6 +12,43 @@ class OpenAIService
         // No initialization needed, we'll use the OpenAI facade directly
     }
 
+    public function generateChatResponse($messages, $options = [])
+    {
+        try {
+            $response = OpenAI::chat()->create([
+                'model' => config('openai.model', 'gpt-3.5-turbo'),
+                'messages' => $messages,
+                'temperature' => $options['temperature'] ?? 0.7,
+                'max_tokens' => $options['max_tokens'] ?? 500,
+            ]);
+
+            if (isset($response->choices[0]->message->content)) {
+                return $response->choices[0]->message->content;
+            } else {
+                Log::error('OpenAI API Error: Invalid response format');
+                return "Désolé, je n'ai pas pu générer une réponse. Veuillez réessayer plus tard.";
+            }
+        } catch (\Exception $e) {
+            Log::error('OpenAI Service Error: ' . $e->getMessage());
+            return "Désolé, une erreur s'est produite. Veuillez réessayer plus tard.";
+        }
+    }
+
+    public function generateSystemPrompt($user)
+    {
+        $prompt = "Vous êtes un assistant virtuel pour la plateforme de génération de fiches techniques. ";
+
+        if ($user->isAdmin()) {
+            $prompt .= "Vous aidez un administrateur de la plateforme à gérer les fiches techniques et à répondre aux questions des utilisateurs.";
+        } else {
+            $prompt .= "Vous aidez un utilisateur à comprendre comment utiliser la plateforme, à créer des fiches techniques et à comprendre les recommandations générées.";
+        }
+
+        $prompt .= " Répondez de manière concise et professionnelle en français. Si vous ne connaissez pas la réponse à une question, dites-le honnêtement.";
+
+        return $prompt;
+    }
+
     public function analyzeProjectRequirements(array $clientResponse): array
     {
         try {
@@ -56,12 +93,46 @@ class OpenAIService
 
         Please provide a JSON response with the following structure:
         {
-            \"ai_suggested_features\": [\"feature1\", \"feature2\"],
-            \"ai_suggested_technologies\": [\"tech1\", \"tech2\"],
-            \"ai_estimated_duration\": \"X months\",
+            \"ai_suggested_features\": [
+                {\"name\": \"Feature Name\", \"description\": \"Detailed description of the feature\", \"priority\": \"High/Medium/Low\"}
+            ],
+            \"ai_suggested_technologies\": {
+                \"frontend\": [\"tech1\", \"tech2\"],
+                \"backend\": [\"tech1\", \"tech2\"],
+                \"database\": [\"tech1\", \"tech2\"],
+                \"devops\": [\"tech1\", \"tech2\"],
+                \"other\": [\"tech1\", \"tech2\"]
+            },
+            \"ai_estimated_duration\": {
+                \"total\": \"X months\",
+                \"breakdown\": {
+                    \"planning\": \"X weeks\",
+                    \"development\": \"X weeks\",
+                    \"testing\": \"X weeks\",
+                    \"deployment\": \"X weeks\"
+                }
+            },
             \"ai_analysis_summary\": \"Project analysis summary\",
-            \"ai_complexity_factors\": [\"factor1\", \"factor2\"],
-            \"ai_cost_estimate\": numeric_value
+            \"ai_detailed_analysis\": {
+                \"strengths\": [\"strength1\", \"strength2\"],
+                \"challenges\": [\"challenge1\", \"challenge2\"],
+                \"opportunities\": [\"opportunity1\", \"opportunity2\"],
+                \"risks\": [\"risk1\", \"risk2\"]
+            },
+            \"ai_complexity_factors\": [
+                {\"factor\": \"Factor name\", \"impact\": \"Description of impact\", \"mitigation\": \"Mitigation strategy\"}
+            ],
+            \"ai_cost_estimate\": {
+                \"total\": numeric_value,
+                \"breakdown\": {
+                    \"development\": numeric_value,
+                    \"design\": numeric_value,
+                    \"testing\": numeric_value,
+                    \"deployment\": numeric_value,
+                    \"maintenance\": numeric_value
+                }
+            },
+            \"ai_recommendations\": [\"recommendation1\", \"recommendation2\"]
         }
 
         PROJECT DETAILS:
@@ -115,14 +186,17 @@ class OpenAIService
         }
 
         $prompt .= "\n\nBased on the above information, provide a detailed analysis including:
-        1. A comprehensive list of suggested features that would benefit this project
-        2. Recommended technologies for frontend, backend, database, and any other relevant components
-        3. A realistic timeline estimation considering the scope and complexity
-        4. A summary analysis of the project's feasibility, challenges, and opportunities
-        5. Key complexity factors that might impact development
-        6. A cost estimate range based on industry standards for similar projects
+        1. A comprehensive list of suggested features that would benefit this project, with detailed descriptions and priority levels
+        2. Recommended technologies for frontend, backend, database, DevOps, and any other relevant components, with justification for each choice
+        3. A realistic timeline estimation with a breakdown of different phases (planning, development, testing, deployment)
+        4. A detailed analysis of the project's strengths, challenges, opportunities, and risks
+        5. Key complexity factors that might impact development, their potential impact, and mitigation strategies
+        6. A detailed cost estimate breakdown based on industry standards for similar projects
+        7. Specific recommendations to ensure project success
 
-        Ensure your response is in valid JSON format as specified above.";
+        Your analysis should be thorough and detailed, providing actionable insights that would help the client make informed decisions about their project. Consider industry best practices, current technology trends, and potential future scalability needs.
+
+        Ensure your response is in valid JSON format as specified above. Make sure to provide detailed explanations rather than just brief statements.";
 
         return $prompt;
     }
@@ -133,13 +207,106 @@ class OpenAIService
             $decoded = json_decode($response, true);
 
             if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                // Process suggested features - flatten if needed
+                $features = $decoded['ai_suggested_features'] ?? [];
+                $processedFeatures = [];
+
+                if (is_array($features)) {
+                    // Check if we have the new detailed format or the old simple format
+                    if (isset($features[0]) && is_array($features[0]) && isset($features[0]['name'])) {
+                        // New detailed format - keep as is
+                        $processedFeatures = $features;
+                    } else {
+                        // Old simple format or unexpected format - use as is
+                        $processedFeatures = $features;
+                    }
+                }
+
+                // Process technologies - handle both object and array formats
+                $technologies = $decoded['ai_suggested_technologies'] ?? [];
+                $processedTechnologies = [];
+
+                if (is_array($technologies)) {
+                    if (isset($technologies['frontend']) || isset($technologies['backend'])) {
+                        // New format with categories - flatten with prefixes
+                        foreach ($technologies as $category => $techs) {
+                            if (is_array($techs)) {
+                                foreach ($techs as $tech) {
+                                    $processedTechnologies[] = "[$category] $tech";
+                                }
+                            }
+                        }
+                    } else {
+                        // Old simple format or unexpected format - use as is
+                        $processedTechnologies = $technologies;
+                    }
+                }
+
+                // Process duration - handle both string and object formats
+                $duration = $decoded['ai_estimated_duration'] ?? '';
+                $processedDuration = '';
+
+                if (is_array($duration) && isset($duration['total'])) {
+                    // New detailed format
+                    $processedDuration = $duration['total'];
+                    if (isset($duration['breakdown']) && is_array($duration['breakdown'])) {
+                        $processedDuration .= " (";
+                        $breakdownParts = [];
+                        foreach ($duration['breakdown'] as $phase => $time) {
+                            $breakdownParts[] = "$phase: $time";
+                        }
+                        $processedDuration .= implode(', ', $breakdownParts) . ")";
+                    }
+                } else {
+                    // Old simple format or unexpected format
+                    $processedDuration = is_string($duration) ? $duration : '';
+                }
+
+                // Process complexity factors - handle both simple and detailed formats
+                $factors = $decoded['ai_complexity_factors'] ?? [];
+                $processedFactors = [];
+
+                if (is_array($factors)) {
+                    if (isset($factors[0]) && is_array($factors[0]) && isset($factors[0]['factor'])) {
+                        // New detailed format
+                        foreach ($factors as $factorObj) {
+                            $factor = $factorObj['factor'] ?? '';
+                            $impact = $factorObj['impact'] ?? '';
+                            $mitigation = $factorObj['mitigation'] ?? '';
+
+                            $processedFactors[] = "$factor - Impact: $impact" . ($mitigation ? " - Mitigation: $mitigation" : "");
+                        }
+                    } else {
+                        // Old simple format or unexpected format
+                        $processedFactors = $factors;
+                    }
+                }
+
+                // Process cost estimate - handle both numeric and object formats
+                $costEstimate = $decoded['ai_cost_estimate'] ?? 0;
+                $processedCostEstimate = 0;
+
+                if (is_array($costEstimate) && isset($costEstimate['total'])) {
+                    // New detailed format
+                    $processedCostEstimate = floatval($costEstimate['total']);
+                } else {
+                    // Old simple format or unexpected format
+                    $processedCostEstimate = floatval($costEstimate);
+                }
+
+                // Get detailed analysis if available
+                $detailedAnalysis = $decoded['ai_detailed_analysis'] ?? null;
+                $recommendations = $decoded['ai_recommendations'] ?? [];
+
                 return [
-                    'ai_suggested_features' => $decoded['ai_suggested_features'] ?? [],
-                    'ai_suggested_technologies' => $decoded['ai_suggested_technologies'] ?? [],
-                    'ai_estimated_duration' => $decoded['ai_estimated_duration'] ?? '',
+                    'ai_suggested_features' => $processedFeatures,
+                    'ai_suggested_technologies' => $processedTechnologies,
+                    'ai_estimated_duration' => $processedDuration,
                     'ai_analysis_summary' => $decoded['ai_analysis_summary'] ?? '',
-                    'ai_complexity_factors' => $decoded['ai_complexity_factors'] ?? [],
-                    'ai_cost_estimate' => floatval($decoded['ai_cost_estimate'] ?? 0)
+                    'ai_complexity_factors' => $processedFactors,
+                    'ai_cost_estimate' => $processedCostEstimate,
+                    'ai_detailed_analysis' => $detailedAnalysis,
+                    'ai_recommendations' => $recommendations
                 ];
             }
 

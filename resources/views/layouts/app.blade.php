@@ -50,6 +50,60 @@
         ::selection {
             background-color: rgba(99, 102, 241, 0.2);
         }
+
+        /* Animation pour le bouton du sidebar */
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+            }
+        }
+
+        /* Amélioration pour les appareils mobiles */
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            h1, h2, h3 {
+                word-break: break-word;
+            }
+
+            .text-truncate {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .flex-wrap-mobile {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Amélioration pour les très petits écrans */
+        @media (max-width: 480px) {
+            .container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .xs-hidden {
+                display: none;
+            }
+
+            .xs-full-width {
+                width: 100%;
+            }
+        }
     </style>
     @stack('styles')
 </head>
@@ -78,7 +132,7 @@
 
                     <!-- Main Content -->
                     <div class="flex-1 overflow-x-hidden overflow-y-auto">
-                   
+
                     @include('layouts.partials.navbar')
 
                         <main class="container mx-auto px-6 py-8">

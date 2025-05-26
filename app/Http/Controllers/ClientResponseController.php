@@ -139,7 +139,9 @@ class ClientResponseController extends Controller
                         'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
                         'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
                         'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
+                        'ai_detailed_analysis' => $aiAnalysis['ai_detailed_analysis'] ?? [],
                         'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
+                        'ai_recommendations' => $aiAnalysis['ai_recommendations'] ?? [],
                         'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
                     ]);
                 }
