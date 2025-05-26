@@ -12,82 +12,6 @@ class OpenAIService
         // No initialization needed, we'll use the OpenAI facade directly
     }
 
-    public function generateChatResponse($messages, $options = [])
-    {
-        return $this->executeWithRetry(function() use ($messages, $options) {
-            // Validate API key avec plus de détails et fallback
-            $apiKey = config('openai.api_key') ?: env('OPENAI_API_KEY');
-            if (empty($apiKey)) {
-                Log::error('OpenAI API key is not configured', [
-                    'config_value' => config('openai.api_key'),
-                    'env_value' => env('OPENAI_API_KEY') ? 'SET' : 'NOT_SET',
-                    'fallback_used' => true
-                ]);
-                return "Configuration manquante. Veuillez contacter l'administrateur.";
-            }
-
-            // Validate messages
-            if (empty($messages) || !is_array($messages)) {
-                Log::error('OpenAI Service Error: Invalid messages format', ['messages' => $messages]);
-                return "Format de message invalide. Veuillez réessayer.";
-            }
-
-            // Augmenter la limite de temps d'exécution pour cette requête
-            set_time_limit(90);
-
-            $model = config('openai.model') ?: env('OPENAI_MODEL', 'gpt-3.5-turbo');
-            $temperature = $options['temperature'] ?? config('openai.temperature', 0.7);
-            $maxTokens = $options['max_tokens'] ?? config('openai.max_tokens.chat', 500);
-
-            Log::info('OpenAI Chat Request', [
-                'model' => $model,
-                'message_count' => count($messages),
-                'temperature' => $temperature,
-                'max_tokens' => $maxTokens,
-                'api_key_length' => strlen($apiKey)
-            ]);
-
-            try {
-                $response = OpenAI::chat()->create([
-                    'model' => $model,
-                    'messages' => $messages,
-                    'temperature' => $temperature,
-                    'max_tokens' => $maxTokens,
-                ]);
-
-                Log::info('OpenAI Chat Response received', [
-                    'has_choices' => isset($response->choices),
-                    'choices_count' => isset($response->choices) ? count($response->choices) : 0
-                ]);
-
-                if (isset($response->choices[0]->message->content)) {
-                    return $response->choices[0]->message->content;
-                } else {
-                    Log::error('OpenAI API Error: Invalid response format', [
-                        'response' => json_encode($response)
-                    ]);
-                    return "Désolé, je n'ai pas pu générer une réponse. Veuillez réessayer plus tard.";
-                }
-            } catch (\Exception $e) {
-                Log::error('OpenAI API Exception in chat', [
-                    'error' => $e->getMessage(),
-                    'code' => $e->getCode(),
-                    'file' => $e->getFile(),
-                    'line' => $e->getLine()
-                ]);
-
-                // Retourner un message d'erreur spécifique selon le type d'erreur
-                if (strpos($e->getMessage(), 'API key') !== false || strpos($e->getMessage(), 'authentication') !== false) {
-                    return "Erreur d'authentification API. Veuillez contacter l'administrateur.";
-                } elseif (strpos($e->getMessage(), 'timeout') !== false) {
-                    return "Délai d'attente dépassé. Veuillez réessayer.";
-                } else {
-                    return "Erreur temporaire du service. Veuillez réessayer dans quelques instants.";
-                }
-            }
-        }, 'chat');
-    }
-
     private function executeWithRetry(callable $callback, string $operation = 'general')
     {
         $maxAttempts = config('openai.retry.max_attempts', 3);
@@ -155,20 +79,7 @@ class OpenAIService
         return "Désolé, une erreur s'est produite après plusieurs tentatives. Veuillez réessayer plus tard.";
     }
 
-    public function generateSystemPrompt($user)
-    {
-        $prompt = "Vous êtes un assistant virtuel pour la plateforme de génération de fiches techniques. ";
 
-        if ($user->isAdmin()) {
-            $prompt .= "Vous aidez un administrateur de la plateforme à gérer les fiches techniques et à répondre aux questions des utilisateurs.";
-        } else {
-            $prompt .= "Vous aidez un utilisateur à comprendre comment utiliser la plateforme, à créer des fiches techniques et à comprendre les recommandations générées.";
-        }
-
-        $prompt .= " Répondez de manière concise et professionnelle en français. Si vous ne connaissez pas la réponse à une question, dites-le honnêtement.";
-
-        return $prompt;
-    }
 
     public function analyzeProjectRequirements(array $clientResponse): array
     {

@@ -59,7 +59,6 @@ return [
     */
 
     'max_tokens' => [
-        'chat' => 500,
         'analysis' => 1500,
     ],
 

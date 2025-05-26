@@ -64,15 +64,7 @@
                                 </div>
                                 <span class="font-semibold text-gray-800">Notifications</span>
                             </div>
-                        @elseif(request()->routeIs('chat.*'))
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center mr-3">
-                                    <svg class="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                                    </svg>
-                                </div>
-                                <span class="font-semibold text-gray-800">Assistant IA</span>
-                            </div>
+
                         @elseif(request()->routeIs('admin.*'))
                             <div class="flex items-center">
                                 <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center mr-3">
@@ -118,15 +110,7 @@
                     </div>
                 @endif
 
-                <!-- Chatbot -->
-                <a href="{{ route('chat.index') }}" class="relative p-2.5 text-gray-600 hover:text-primary-600 hover:bg-primary-50/80 rounded-xl focus:outline-none transition-all duration-200 group" title="Assistant IA">
-                    <div class="relative">
-                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                        </svg>
-                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full animate-pulse"></div>
-                    </div>
-                </a>
+
 
                 <!-- Notifications -->
                 <div class="relative" x-data="{ open: false, notifications: [], unreadCount: 0 }" x-init="
@@ -319,14 +303,7 @@
                                 <span>Notifications</span>
                             </a>
 
-                            <a href="{{ route('chat.index') }}" class="flex items-center px-4 py-2 text-sm text-dark-700 hover:bg-primary-50 hover:text-primary-600 transition-colors duration-200 group">
-                                <div class="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center mr-3 group-hover:bg-primary-200 transition-colors duration-200">
-                                    <svg class="w-4 h-4 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                                    </svg>
-                                </div>
-                                <span>Assistant IA</span>
-                            </a>
+
                         </div>
 
                         <div class="py-1 border-t border-gray-100">

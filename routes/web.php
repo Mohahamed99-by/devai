@@ -79,13 +79,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'getLatest'])
         ->name('notifications.latest');
 
-    // Routes pour le chatbot
-    Route::get('/chat', [App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
-    Route::get('/chat/new', [App\Http\Controllers\ChatController::class, 'newConversation'])->name('chat.new');
-    Route::get('/chat/{id}', [App\Http\Controllers\ChatController::class, 'show'])->name('chat.show');
-    Route::post('/chat', [App\Http\Controllers\ChatController::class, 'store'])->middleware('extend.time:90')->name('chat.store'); // 90 secondes pour le chat
-    Route::put('/chat/{id}/title', [App\Http\Controllers\ChatController::class, 'updateTitle'])->name('chat.update-title');
-    Route::post('/chat/{id}/archive', [App\Http\Controllers\ChatController::class, 'archiveConversation'])->name('chat.archive');
+
 
     // Route pour afficher une fiche technique spécifique (doit être après les routes spécifiques)
     Route::get('/client-response/{clientResponse}', [ClientResponseController::class, 'show'])->name('client-response.show');
@@ -116,7 +110,7 @@ Route::middleware(['auth'])->group(function () {
             ->middleware('permission:delete_technical_sheets')
             ->name('technical-sheets.admin.destroy');
 
-        // Les routes de chat sont définies au niveau utilisateur
+
 
         // Gestion des utilisateurs
         Route::middleware('permission:manage_users')->group(function () {
