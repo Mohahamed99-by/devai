@@ -40,6 +40,8 @@ Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController
 Route::get('/test-mail', [App\Http\Controllers\TestEmailController::class, 'testEmail']);
 Route::get('/test-unified-notification', [App\Http\Controllers\TestEmailController::class, 'testUnifiedNotification']);
 
+
+
 // Routes d'authentification
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);

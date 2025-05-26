@@ -15,9 +15,14 @@ class OpenAIService
     public function generateChatResponse($messages, $options = [])
     {
         return $this->executeWithRetry(function() use ($messages, $options) {
-            // Validate API key
-            if (empty(config('openai.api_key'))) {
-                Log::error('OpenAI API key is not configured');
+            // Validate API key avec plus de détails et fallback
+            $apiKey = config('openai.api_key') ?: env('OPENAI_API_KEY');
+            if (empty($apiKey)) {
+                Log::error('OpenAI API key is not configured', [
+                    'config_value' => config('openai.api_key'),
+                    'env_value' => env('OPENAI_API_KEY') ? 'SET' : 'NOT_SET',
+                    'fallback_used' => true
+                ]);
                 return "Configuration manquante. Veuillez contacter l'administrateur.";
             }
 
@@ -30,31 +35,55 @@ class OpenAIService
             // Augmenter la limite de temps d'exécution pour cette requête
             set_time_limit(90);
 
+            $model = config('openai.model') ?: env('OPENAI_MODEL', 'gpt-3.5-turbo');
+            $temperature = $options['temperature'] ?? config('openai.temperature', 0.7);
+            $maxTokens = $options['max_tokens'] ?? config('openai.max_tokens.chat', 500);
+
             Log::info('OpenAI Chat Request', [
-                'model' => config('openai.model', 'gpt-3.5-turbo'),
+                'model' => $model,
                 'message_count' => count($messages),
-                'options' => $options
+                'temperature' => $temperature,
+                'max_tokens' => $maxTokens,
+                'api_key_length' => strlen($apiKey)
             ]);
 
-            $response = OpenAI::chat()->create([
-                'model' => config('openai.model', 'gpt-3.5-turbo'),
-                'messages' => $messages,
-                'temperature' => $options['temperature'] ?? config('openai.temperature', 0.7),
-                'max_tokens' => $options['max_tokens'] ?? config('openai.max_tokens.chat', 500),
-            ]);
-
-            Log::info('OpenAI Chat Response received', [
-                'has_choices' => isset($response->choices),
-                'choices_count' => isset($response->choices) ? count($response->choices) : 0
-            ]);
-
-            if (isset($response->choices[0]->message->content)) {
-                return $response->choices[0]->message->content;
-            } else {
-                Log::error('OpenAI API Error: Invalid response format', [
-                    'response' => json_encode($response)
+            try {
+                $response = OpenAI::chat()->create([
+                    'model' => $model,
+                    'messages' => $messages,
+                    'temperature' => $temperature,
+                    'max_tokens' => $maxTokens,
                 ]);
-                return "Désolé, je n'ai pas pu générer une réponse. Veuillez réessayer plus tard.";
+
+                Log::info('OpenAI Chat Response received', [
+                    'has_choices' => isset($response->choices),
+                    'choices_count' => isset($response->choices) ? count($response->choices) : 0
+                ]);
+
+                if (isset($response->choices[0]->message->content)) {
+                    return $response->choices[0]->message->content;
+                } else {
+                    Log::error('OpenAI API Error: Invalid response format', [
+                        'response' => json_encode($response)
+                    ]);
+                    return "Désolé, je n'ai pas pu générer une réponse. Veuillez réessayer plus tard.";
+                }
+            } catch (\Exception $e) {
+                Log::error('OpenAI API Exception in chat', [
+                    'error' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine()
+                ]);
+
+                // Retourner un message d'erreur spécifique selon le type d'erreur
+                if (strpos($e->getMessage(), 'API key') !== false || strpos($e->getMessage(), 'authentication') !== false) {
+                    return "Erreur d'authentification API. Veuillez contacter l'administrateur.";
+                } elseif (strpos($e->getMessage(), 'timeout') !== false) {
+                    return "Délai d'attente dépassé. Veuillez réessayer.";
+                } else {
+                    return "Erreur temporaire du service. Veuillez réessayer dans quelques instants.";
+                }
             }
         }, 'chat');
     }
