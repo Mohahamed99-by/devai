@@ -51,6 +51,13 @@ class AdminNotificationService
     protected $mailService;
 
     /**
+     * Service d'envoi d'emails AWS
+     *
+     * @var AwsEmailService
+     */
+    protected $awsEmailService;
+
+    /**
      * Constructeur
      *
      * @param MailService $mailService
@@ -58,6 +65,7 @@ class AdminNotificationService
     public function __construct(MailService $mailService)
     {
         $this->mailService = $mailService;
+        $this->awsEmailService = app(AwsEmailService::class);
         $this->adminEmail = env('MAIL_ADMIN_EMAIL', 'mohamedtolba161@gmail.com');
         $this->fromEmail = env('MAIL_FROM_ADDRESS', 'mohamedtolba161@gmail.com');
         $this->fromName = env('MAIL_FROM_NAME', 'DevsAI Notifications');
@@ -96,7 +104,8 @@ class AdminNotificationService
             ])->render();
 
             // Envoyer l'email avec l'utilisateur comme expéditeur
-            $result = $this->mailService->sendEmail(
+            // Utiliser le service AWS en priorité, puis fallback vers le service standard
+            $result = $this->awsEmailService->sendEmail(
                 $this->adminEmail,
                 $subject,
                 $emailContent,
@@ -105,6 +114,20 @@ class AdminNotificationService
                 $userEmail, // Répondre directement à l'utilisateur
                 $userName   // Nom pour la réponse
             );
+
+            // Si le service AWS échoue, essayer avec le service standard
+            if (!$result) {
+                Log::warning('AWS Email Service a échoué, tentative avec MailService standard');
+                $result = $this->mailService->sendEmail(
+                    $this->adminEmail,
+                    $subject,
+                    $emailContent,
+                    $userEmail,
+                    $userName,
+                    $userEmail,
+                    $userName
+                );
+            }
 
             if ($result) {
                 Log::info('Email de notification unifié envoyé avec succès', [
@@ -127,7 +150,7 @@ class AdminNotificationService
 
                 // Tentative de retry après 5 secondes
                 sleep(5);
-                $retryResult = $this->mailService->sendEmail(
+                $retryResult = $this->awsEmailService->sendEmail(
                     $this->adminEmail,
                     '[RETRY] ' . $subject,
                     $emailContent,
@@ -136,6 +159,19 @@ class AdminNotificationService
                     $userEmail,
                     $userName
                 );
+
+                // Si AWS échoue encore, essayer avec le service standard
+                if (!$retryResult) {
+                    $retryResult = $this->mailService->sendEmail(
+                        $this->adminEmail,
+                        '[RETRY-FALLBACK] ' . $subject,
+                        $emailContent,
+                        $userEmail,
+                        $userName,
+                        $userEmail,
+                        $userName
+                    );
+                }
 
                 if ($retryResult) {
                     Log::info('Email de notification unifié envoyé avec succès après retry', [
