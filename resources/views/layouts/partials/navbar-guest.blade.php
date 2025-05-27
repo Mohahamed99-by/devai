@@ -19,10 +19,24 @@
 
     @keyframes navbarGlow {
         0%, 100% {
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+            box-shadow:
+                0 4px 20px rgba(99, 102, 241, 0.15),
+                0 1px 3px rgba(0, 0, 0, 0.1);
         }
         50% {
-            box-shadow: 0 4px 30px rgba(99, 102, 241, 0.2);
+            box-shadow:
+                0 4px 30px rgba(99, 102, 241, 0.25),
+                0 8px 25px rgba(217, 70, 239, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+    }
+
+    @keyframes backgroundShift {
+        0%, 100% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
         }
     }
 
@@ -32,13 +46,37 @@
 
     .navbar-glow {
         animation: navbarGlow 4s ease-in-out infinite;
+        background-size: 200% 200%;
     }
 
     .glass-navbar {
-        background: rgba(255, 255, 255, 0.95);
+        background: linear-gradient(135deg,
+            rgba(255, 255, 255, 0.98) 0%,
+            rgba(99, 102, 241, 0.05) 25%,
+            rgba(217, 70, 239, 0.03) 50%,
+            rgba(99, 102, 241, 0.05) 75%,
+            rgba(255, 255, 255, 0.98) 100%);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+        border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+        position: relative;
+    }
+
+    .glass-navbar::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(99, 102, 241, 0.02) 25%,
+            rgba(217, 70, 239, 0.02) 50%,
+            rgba(99, 102, 241, 0.02) 75%,
+            transparent 100%);
+        pointer-events: none;
+        z-index: -1;
     }
 </style>
 @endpush
