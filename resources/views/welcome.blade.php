@@ -39,7 +39,7 @@
                 </div>
 
                 <h1 class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-bold mb-4 sm:mb-6 text-white leading-tight tracking-tight animate-slide-up">
-                    Transform Ideas into <span class="gradient-text animate-shine">Precision Technical Specs</span>
+                    Transform Ideas into <span class="gradient-text">Precision Technical Specs</span>
                 </h1>
 
                 <p class="text-base sm:text-lg md:text-xl mb-6 sm:mb-10 text-white/90 max-w-3xl mx-auto leading-relaxed animate-slide-up" style="animation-delay: 100ms">

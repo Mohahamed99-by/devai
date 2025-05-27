@@ -8,11 +8,11 @@
     .stat-card {
         transition: all 0.3s ease;
     }
-    
+
     .stat-card:hover {
         transform: translateY(-5px);
     }
-    
+
     .gradient-border {
         position: relative;
         border-radius: 0.75rem;
@@ -20,29 +20,29 @@
                     linear-gradient(to right, #4F46E5, #7C3AED) border-box;
         border: 2px solid transparent;
     }
-    
+
     .chart-container {
         position: relative;
         transition: all 0.3s ease;
     }
-    
+
     .chart-container:hover {
         transform: scale(1.02);
     }
-    
+
     .project-row {
         transition: all 0.2s ease;
     }
-    
+
     .project-row:hover {
         background-color: #F9FAFB;
     }
-    
-    .pulse {
-        animation: pulse 2s infinite;
+
+    .pulse-red {
+        animation: pulse-red 2s infinite;
     }
-    
-    @keyframes pulse {
+
+    @keyframes pulse-red {
         0% {
             box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
         }
@@ -61,7 +61,7 @@
         <h1 class="text-3xl font-bold text-gray-800 mb-2">Tableau de Bord</h1>
         <p class="text-gray-600">Bienvenue dans votre espace administrateur, gérez vos fiches techniques et suivez les statistiques.</p>
     </div>
-    
+
     <!-- Stats Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div class="bg-white rounded-xl shadow-md p-6 stat-card border-l-4 border-indigo-500">
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl shadow-md p-6 stat-card border-l-4 border-green-500">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-green-100 mr-4">
@@ -107,7 +107,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl shadow-md p-6 stat-card border-l-4 border-yellow-500">
             <div class="flex items-center">
                 <div class="p-3 rounded-full bg-yellow-100 mr-4">
@@ -131,10 +131,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="bg-white rounded-xl shadow-md p-6 stat-card border-l-4 border-red-500">
             <div class="flex items-center">
-                <div class="p-3 rounded-full bg-red-100 mr-4 pulse">
+                <div class="p-3 rounded-full bg-red-100 mr-4 pulse-red">
                     <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -156,7 +156,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Project Types Chart -->
         <div class="bg-white rounded-xl shadow-md p-6 chart-container gradient-border">
@@ -171,7 +171,7 @@
                 <canvas id="projectTypesChart"></canvas>
             </div>
         </div>
-        
+
         <!-- Monthly Stats Chart -->
         <div class="bg-white rounded-xl shadow-md p-6 chart-container gradient-border">
             <h2 class="text-xl font-semibold text-gray-800 mb-4 flex items-center">
@@ -185,7 +185,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- Recent Projects -->
         <div class="bg-white rounded-xl shadow-md p-6">
@@ -203,7 +203,7 @@
                     </svg>
                 </a>
             </div>
-            
+
             @if($newProjects->isEmpty())
                 <div class="text-center py-8">
                     <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -230,7 +230,7 @@
                                         <span class="text-sm font-medium text-gray-900">#{{ $project->id }}</span>
                                     </td>
                                     <td class="py-3 px-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full 
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full
                                             @if($project->project_type == 'web') bg-blue-100 text-blue-800
                                             @elseif($project->project_type == 'mobile') bg-green-100 text-green-800
                                             @elseif($project->project_type == 'desktop') bg-purple-100 text-purple-800
@@ -256,7 +256,7 @@
                 </div>
             @endif
         </div>
-        
+
         <!-- Urgent Projects -->
         <div class="bg-white rounded-xl shadow-md p-6">
             <div class="flex justify-between items-center mb-6">
@@ -273,7 +273,7 @@
                     </svg>
                 </a>
             </div>
-            
+
             @if($urgentProjects->isEmpty())
                 <div class="text-center py-8">
                     <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -300,7 +300,7 @@
                                         <span class="text-sm font-medium text-gray-900">#{{ $project->id }}</span>
                                     </td>
                                     <td class="py-3 px-4 whitespace-nowrap">
-                                        <span class="px-2 py-1 text-xs font-medium rounded-full 
+                                        <span class="px-2 py-1 text-xs font-medium rounded-full
                                             @if($project->project_type == 'web') bg-blue-100 text-blue-800
                                             @elseif($project->project_type == 'mobile') bg-green-100 text-green-800
                                             @elseif($project->project_type == 'desktop') bg-purple-100 text-purple-800
@@ -377,7 +377,7 @@
                 }
             }
         });
-        
+
         // Monthly Stats Chart
         const monthlyStatsCtx = document.getElementById('monthlyStatsChart').getContext('2d');
         const monthlyStatsChart = new Chart(monthlyStatsCtx, {

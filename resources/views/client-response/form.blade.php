@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Générateur de Fiche Technique - Questionnaire</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+
+@section('title', 'Questionnaire de Projet - Générateur de Fiche Technique')
+
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
             <div class="mb-6">
@@ -382,7 +377,7 @@
             </div>
         </form>
 
-        <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 items-center justify-center z-50 hidden">
             <div class="bg-white p-6 rounded-lg shadow-lg text-center">
                 <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
                 <p class="text-lg font-semibold">Analyse de vos besoins en cours...</p>
@@ -391,8 +386,10 @@
         </div>
         </div>
     </div>
+@endsection
 
-    <script>
+@push('scripts')
+<script>
         // Show/hide maintenance options based on checkbox
         document.querySelector('input[name="needs_maintenance"]').addEventListener('change', function() {
             const maintenanceOptions = document.getElementById('maintenanceOptions');
@@ -444,6 +441,7 @@
             try {
                 // Show loading overlay
                 loadingOverlay.classList.remove('hidden');
+                loadingOverlay.classList.add('flex');
                 submitButton.disabled = true;
 
                 const response = await fetch('/client-response', {
@@ -470,6 +468,7 @@
                 } else {
                     // Hide loading overlay
                     loadingOverlay.classList.add('hidden');
+                    loadingOverlay.classList.remove('flex');
                     submitButton.disabled = false;
 
                     const errorMessage = result.message || 'Failed to submit form';
@@ -483,12 +482,12 @@
             } catch (error) {
                 // Hide loading overlay
                 loadingOverlay.classList.add('hidden');
+                loadingOverlay.classList.remove('flex');
                 submitButton.disabled = false;
 
                 console.error('Error:', error);
                 alert('Error submitting form: ' + error.message);
             }
         });
-    </script>
-</body>
-</html>
+</script>
+@endpush

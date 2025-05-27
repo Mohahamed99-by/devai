@@ -59,6 +59,29 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Pagination styling */
+        .pagination-container nav div:first-child {
+            display: none; /* Masquer le texte "Showing x to y of z results" */
+        }
+
+        .pagination-container nav span[aria-current="page"] span {
+            background-color: #4f46e5 !important;
+            color: white !important;
+            border-color: #4f46e5 !important;
+        }
+
+        .pagination-container nav a {
+            color: #4f46e5 !important;
+        }
+
+        .pagination-container nav a:hover {
+            background-color: #f3f4f6 !important;
+        }
+
+        .pagination-container nav span[aria-disabled="true"] span {
+            color: #9ca3af !important;
+        }
+
         /* Animation pour le bouton du sidebar */
         .pulse-animation {
             animation: pulse-ring 2s infinite;
