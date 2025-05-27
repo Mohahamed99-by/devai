@@ -36,15 +36,11 @@ Route::get('/client-response/confirmation/{clientResponse}', [ClientResponseCont
 Route::post('/client-response/{clientResponse}/reanalyze', [ClientResponseController::class, 'reanalyze'])->middleware('extend.time:180')->name('client-response.reanalyze');
 Route::get('/pdf/generate/{clientResponse}', [App\Http\Controllers\PdfController::class, 'generatePdf']);
 
-// Routes de test pour l'envoi d'email
-Route::get('/test-mail', [App\Http\Controllers\TestEmailController::class, 'testEmail']);
-Route::get('/test-unified-notification', [App\Http\Controllers\TestEmailController::class, 'testUnifiedNotification']);
-
-
-
-
-
-
+// Routes de test pour l'envoi d'email (uniquement en développement)
+if (app()->environment(['local', 'testing'])) {
+    Route::get('/test-mail', [App\Http\Controllers\TestEmailController::class, 'testEmail']);
+    Route::get('/test-unified-notification', [App\Http\Controllers\TestEmailController::class, 'testUnifiedNotification']);
+}
 
 // Routes d'authentification
 Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
@@ -79,8 +75,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/notifications/latest', [App\Http\Controllers\NotificationController::class, 'getLatest'])
         ->name('notifications.latest');
 
-
-
     // Route pour afficher une fiche technique spécifique (doit être après les routes spécifiques)
     Route::get('/client-response/{clientResponse}', [ClientResponseController::class, 'show'])->name('client-response.show');
 
@@ -109,8 +103,6 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/technical-sheets/admin/{clientResponse}', [App\Http\Controllers\TechnicalSheetController::class, 'adminDestroy'])
             ->middleware('permission:delete_technical_sheets')
             ->name('technical-sheets.admin.destroy');
-
-
 
         // Gestion des utilisateurs
         Route::middleware('permission:manage_users')->group(function () {

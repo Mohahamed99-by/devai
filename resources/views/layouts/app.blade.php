@@ -51,11 +51,19 @@
             background-color: rgba(99, 102, 241, 0.2);
         }
 
+        /* Glass effect for modals and dropdowns */
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
         /* Animation pour le bouton du sidebar */
         .pulse-animation {
-            animation: pulse 2s infinite;
+            animation: pulse-ring 2s infinite;
         }
-        @keyframes pulse {
+        @keyframes pulse-ring {
             0% {
                 box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
             }

@@ -20,13 +20,6 @@
     .animate-fade-in-up {
         animation: fadeInUp 0.3s ease-out;
     }
-
-    .glass-effect {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
 </style>
 @endpush
 

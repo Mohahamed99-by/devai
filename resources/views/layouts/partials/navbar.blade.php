@@ -1,20 +1,7 @@
 @push('styles')
 <style>
-    .glass-effect {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
     .notification-badge {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.1); }
     }
 </style>
 @endpush
@@ -136,7 +123,7 @@
                             <svg class="w-6 h-6 group-hover:scale-110 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
-                            <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-1 -right-1 notification-badge text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg text-[10px] font-bold min-w-[20px]"></span>
+                            <span x-show="unreadCount > 0" x-text="unreadCount" class="absolute -top-1 -right-1 notification-badge text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-lg text-[10px] font-bold min-w-[20px] animate-pulse"></span>
                         </div>
                     </button>
 

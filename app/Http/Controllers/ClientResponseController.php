@@ -137,28 +137,7 @@ class ClientResponseController extends Controller
                 }
 
                 // Sauvegarder l'analyse IA
-                try {
-                    $updateData = [
-                        'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
-                        'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
-                        'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
-                        'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
-                        'ai_detailed_analysis' => $aiAnalysis['ai_detailed_analysis'] ?? [],
-                        'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
-                        'ai_recommendations' => $aiAnalysis['ai_recommendations'] ?? [],
-                        'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
-                    ];
-
-                    $clientResponse->update($updateData);
-                    Log::info('Analyse IA sauvegardée avec succès pour la réponse client ID: ' . $clientResponse->id);
-
-                } catch (\Exception $dbError) {
-                    Log::error('Erreur lors de la sauvegarde de l\'analyse IA: ' . $dbError->getMessage());
-
-                    // Stocker temporairement les données en session si la DB échoue
-                    Session::put('temp_ai_analysis_' . $clientResponse->id, $aiAnalysis);
-                    Log::info('Analyse IA stockée temporairement en session');
-                }
+                $this->saveAiAnalysis($clientResponse, $aiAnalysis);
 
             } catch (\Exception $e) {
                 Log::error('Erreur lors de l\'analyse IA: ' . $e->getMessage());
@@ -331,16 +310,6 @@ class ClientResponseController extends Controller
     }
 
     /**
-     * Méthode obsolète maintenue pour compatibilité
-     * @deprecated Utiliser sendUnifiedAdminNotification à la place
-     */
-    protected function notifyAdminAboutNewAnswer(ClientResponse $clientResponse)
-    {
-        $userName = Auth::check() ? Auth::user()->name : 'Utilisateur non-authentifié';
-        $this->sendUnifiedAdminNotification($clientResponse, $userName);
-    }
-
-    /**
      * Associer une réponse temporaire à un utilisateur après inscription
      */
     public function associateTemporaryResponse(Request $request)
@@ -410,6 +379,42 @@ class ClientResponseController extends Controller
             'message' => 'Fiche technique associée avec succès.',
             'data' => $clientResponse
         ]);
+    }
+
+    /**
+     * Sauvegarder l'analyse IA dans la base de données
+     */
+    private function saveAiAnalysis(ClientResponse $clientResponse, array $aiAnalysis, bool $isReanalysis = false): array
+    {
+        try {
+            $updateData = [
+                'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
+                'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
+                'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
+                'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
+                'ai_detailed_analysis' => $aiAnalysis['ai_detailed_analysis'] ?? [],
+                'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
+                'ai_recommendations' => $aiAnalysis['ai_recommendations'] ?? [],
+                'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
+            ];
+
+            $clientResponse->update($updateData);
+
+            $logMessage = $isReanalysis ? 'Re-analyse sauvegardée avec succès' : 'Analyse IA sauvegardée avec succès';
+            Log::info($logMessage . ' pour la réponse client ID: ' . $clientResponse->id);
+
+            return ['success' => true];
+
+        } catch (\Exception $dbError) {
+            $logMessage = $isReanalysis ? 'Erreur lors de la sauvegarde de la re-analyse' : 'Erreur lors de la sauvegarde de l\'analyse IA';
+            Log::error($logMessage . ': ' . $dbError->getMessage());
+
+            // Stocker temporairement les données en session si la DB échoue
+            Session::put('temp_ai_analysis_' . $clientResponse->id, $aiAnalysis);
+            Log::info('Analyse IA stockée temporairement en session');
+
+            return ['success' => false];
+        }
     }
 
     /**
@@ -554,42 +559,16 @@ class ClientResponseController extends Controller
             }
 
             // Sauvegarder la nouvelle analyse
-            try {
-                $updateData = [
-                    'ai_suggested_features' => $aiAnalysis['ai_suggested_features'] ?? [],
-                    'ai_suggested_technologies' => $aiAnalysis['ai_suggested_technologies'] ?? [],
-                    'ai_estimated_duration' => $aiAnalysis['ai_estimated_duration'] ?? '',
-                    'ai_analysis_summary' => $aiAnalysis['ai_analysis_summary'] ?? '',
-                    'ai_detailed_analysis' => $aiAnalysis['ai_detailed_analysis'] ?? [],
-                    'ai_complexity_factors' => $aiAnalysis['ai_complexity_factors'] ?? [],
-                    'ai_recommendations' => $aiAnalysis['ai_recommendations'] ?? [],
-                    'ai_cost_estimate' => $aiAnalysis['ai_cost_estimate'] ?? 0.00
-                ];
+            $saveResult = $this->saveAiAnalysis($clientResponse, $aiAnalysis, true);
 
-                $clientResponse->update($updateData);
-                Log::info('Re-analyse sauvegardée avec succès pour la réponse client ID: ' . $clientResponse->id);
+            // Supprimer les données temporaires de la session
+            Session::forget('temp_ai_analysis_' . $clientResponse->id);
 
-                // Supprimer les données temporaires de la session
-                Session::forget('temp_ai_analysis_' . $clientResponse->id);
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Analyse IA mise à jour avec succès',
-                    'redirect_url' => route('client-response.show', $clientResponse->id)
-                ]);
-
-            } catch (\Exception $dbError) {
-                Log::error('Erreur lors de la sauvegarde de la re-analyse: ' . $dbError->getMessage());
-
-                // Stocker temporairement les données en session si la DB échoue
-                Session::put('temp_ai_analysis_' . $clientResponse->id, $aiAnalysis);
-
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Analyse IA mise à jour (stockée temporairement)',
-                    'redirect_url' => route('client-response.show', $clientResponse->id)
-                ]);
-            }
+            return response()->json([
+                'status' => 'success',
+                'message' => $saveResult['success'] ? 'Analyse IA mise à jour avec succès' : 'Analyse IA mise à jour (stockée temporairement)',
+                'redirect_url' => route('client-response.show', $clientResponse->id)
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la re-analyse: ' . $e->getMessage());
