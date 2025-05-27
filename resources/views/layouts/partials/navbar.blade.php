@@ -6,7 +6,7 @@
 </style>
 @endpush
 
-<nav class="glass-effect sticky top-0 z-50 border-b border-gray-200/20 shadow-lg shadow-gray-900/5">
+<nav class="bg-white sticky top-0 z-50 border-b border-gray-200 shadow-lg">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 lg:h-18">
             <div class="flex items-center space-x-4">
@@ -78,11 +78,12 @@
             <div class="flex items-center space-x-2 lg:space-x-3">
                 <!-- Bouton Nouvelle Fiche (visible uniquement pour les clients) -->
                 @if(!Auth::user()->isAdmin())
-                <a href="{{ route('client-response.form') }}" class="hidden lg:flex items-center bg-gradient-to-r from-primary-600 to-primary-700 text-white px-4 py-2.5 rounded-xl shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30 transition-all duration-300 font-semibold transform hover:-translate-y-0.5 group">
-                    <svg class="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <a href="{{ route('client-response.form') }}" class="hidden md:flex items-center bg-gradient-to-r from-primary-600 to-primary-700 text-white px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30 transition-all duration-300 font-semibold transform hover:-translate-y-0.5 group text-xs lg:text-sm">
+                    <svg class="w-4 h-4 lg:w-5 lg:h-5 mr-1 lg:mr-2 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                     </svg>
-                    <span>Nouvelle fiche</span>
+                    <span class="hidden lg:inline">Nouvelle fiche</span>
+                    <span class="lg:hidden">Nouveau</span>
                 </a>
                 @endif
 
@@ -98,6 +99,15 @@
                 @endif
 
 
+
+                <!-- Mobile Nouvelle Fiche Button (visible uniquement pour les clients) -->
+                @if(!Auth::user()->isAdmin())
+                <a href="{{ route('client-response.form') }}" class="md:hidden p-2.5 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-all duration-200 group">
+                    <svg class="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                </a>
+                @endif
 
                 <!-- Notifications -->
                 <div class="relative" x-data="{ open: false, notifications: [], unreadCount: 0 }" x-init="

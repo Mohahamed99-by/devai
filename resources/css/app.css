@@ -85,3 +85,25 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/* Navbar visibility improvements */
+.navbar-item {
+    min-height: 44px; /* Minimum touch target size */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ensure navbar elements are always visible */
+@media (max-width: 768px) {
+    .navbar-mobile-visible {
+        display: flex !important;
+    }
+}
+
+/* Force visibility for critical navigation elements */
+.nav-critical {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: flex !important;
+}

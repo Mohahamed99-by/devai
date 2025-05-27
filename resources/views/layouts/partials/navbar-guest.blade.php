@@ -23,7 +23,7 @@
 </style>
 @endpush
 
-<nav class="glass-effect sticky top-0 z-50 border-b border-gray-200/20 shadow-lg shadow-gray-900/5" x-data="{ mobileMenuOpen: false }">
+<nav class="bg-white sticky top-0 z-50 border-b border-gray-200 shadow-lg" x-data="{ mobileMenuOpen: false }">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16 lg:h-20">
             <!-- Logo with Icon -->
@@ -32,22 +32,22 @@
             </a>
 
             <!-- Desktop Menu -->
-            <div class="hidden lg:flex items-center space-x-1 xl:space-x-2">
-                <a href="#how-it-works" class="relative text-gray-700 hover:text-primary-600 font-medium px-4 py-2.5 rounded-xl hover:bg-primary-50/80 transition-all duration-300 text-sm xl:text-base whitespace-nowrap group">
+            <div class="hidden md:flex items-center space-x-1 lg:space-x-2">
+                <a href="#how-it-works" class="relative text-gray-700 hover:text-primary-600 font-medium px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl hover:bg-primary-50/80 transition-all duration-300 text-xs lg:text-sm xl:text-base whitespace-nowrap group">
                     <span class="relative z-10">Comment ça marche</span>
                     <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-secondary-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                 </a>
-                <a href="#pricing" class="relative text-gray-700 hover:text-primary-600 font-medium px-4 py-2.5 rounded-xl hover:bg-primary-50/80 transition-all duration-300 text-sm xl:text-base group">
+                <a href="#pricing" class="relative text-gray-700 hover:text-primary-600 font-medium px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl hover:bg-primary-50/80 transition-all duration-300 text-xs lg:text-sm xl:text-base group">
                     <span class="relative z-10">Tarifs</span>
                     <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-secondary-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                 </a>
-                <a href="{{ route('login') }}" class="relative text-gray-700 hover:text-primary-600 font-medium px-4 py-2.5 rounded-xl hover:bg-primary-50/80 transition-all duration-300 text-sm xl:text-base group">
+                <a href="{{ route('login') }}" class="relative text-gray-700 hover:text-primary-600 font-medium px-3 lg:px-4 py-2 lg:py-2.5 rounded-xl hover:bg-primary-50/80 transition-all duration-300 text-xs lg:text-sm xl:text-base group">
                     <span class="relative z-10">Connexion</span>
                     <div class="absolute inset-0 bg-gradient-to-r from-primary-50 to-secondary-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
                 </a>
-                <a href="{{ route('register') }}" class="group relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-700 text-white px-6 py-2.5 rounded-xl shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30 hover:-translate-y-0.5 transition-all duration-300 text-sm xl:text-base whitespace-nowrap font-semibold">
+                <a href="{{ route('register') }}" class="group relative overflow-hidden bg-gradient-to-r from-primary-600 to-primary-700 text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-xl shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30 hover:-translate-y-0.5 transition-all duration-300 text-xs lg:text-sm xl:text-base whitespace-nowrap font-semibold">
                     <span class="relative z-10 flex items-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg class="w-3 h-3 lg:w-4 lg:h-4 mr-1 lg:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                         </svg>
                         Inscription
@@ -56,18 +56,15 @@
                 </a>
             </div>
 
-            <!-- Tablet Menu (md to lg) -->
-            <div class="hidden md:flex lg:hidden items-center space-x-3">
-                <a href="{{ route('login') }}" class="text-gray-700 hover:text-primary-600 font-medium px-4 py-2 rounded-xl hover:bg-primary-50/80 transition-all duration-200 text-sm">
-                    Connexion
-                </a>
-                <a href="{{ route('register') }}" class="bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-2 rounded-xl shadow-lg shadow-primary-600/25 hover:shadow-xl hover:shadow-primary-600/30 transition-all duration-300 text-sm font-semibold">
-                    Inscription
-                </a>
-            </div>
-
             <!-- Mobile Menu Button -->
-            <div class="md:hidden">
+            <div class="md:hidden flex items-center space-x-2">
+                <!-- Quick access buttons for small screens -->
+                <a href="{{ route('login') }}" class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded-lg hover:bg-primary-50 hover:text-primary-600 transition-all duration-200 sm:hidden">
+                    Login
+                </a>
+                <a href="{{ route('register') }}" class="text-xs bg-primary-600 text-white px-2 py-1 rounded-lg hover:bg-primary-700 transition-all duration-200 sm:hidden">
+                    Sign Up
+                </a>
                 <button @click="mobileMenuOpen = !mobileMenuOpen" class="relative p-2.5 hover:bg-primary-50/80 rounded-xl transition-all duration-200 group">
                     <svg class="h-6 w-6 text-gray-700 group-hover:text-primary-600 transition-colors duration-200" x-show="!mobileMenuOpen" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
