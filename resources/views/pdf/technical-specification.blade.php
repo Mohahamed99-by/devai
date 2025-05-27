@@ -267,7 +267,8 @@
 <body>
     <div class="header">
         <h1>Fiche Technique</h1>
-        <p>Générée automatiquement par DevsAI - {{ date('d/m/Y') }}</p>
+        <p>{{ $clientResponse->project_name ?? 'Projet #' . $clientResponse->id }}</p>
+        <p>Générée automatiquement par DevsAI - {{ $generatedAt->format('d/m/Y à H:i') }}</p>
     </div>
 
     <div class="section">
@@ -277,7 +278,17 @@
         </div>
         <table>
             <tr>
-                <th width="30%">Type de Projet</th>
+                <th width="30%">ID Projet</th>
+                <td>#{{ $clientResponse->id }}</td>
+            </tr>
+            @if($clientResponse->project_name)
+            <tr>
+                <th>Nom du Projet</th>
+                <td><strong>{{ $clientResponse->project_name }}</strong></td>
+            </tr>
+            @endif
+            <tr>
+                <th>Type de Projet</th>
                 <td>{{ ucfirst(str_replace('_', ' ', $clientResponse->project_type)) }}</td>
             </tr>
             <tr>
@@ -295,15 +306,42 @@
             </tr>
             @endif
             <tr>
+                <th>Statut</th>
+                <td>
+                    @if($clientResponse->status === 'validated')
+                        <span class="badge badge-success">Validé</span>
+                    @elseif($clientResponse->status === 'draft')
+                        <span class="badge badge-warning">Brouillon</span>
+                    @else
+                        <span class="badge badge-primary">{{ ucfirst($clientResponse->status) }}</span>
+                    @endif
+                </td>
+            </tr>
+            <tr>
                 <th>Maintenance</th>
                 <td>
                     @if($clientResponse->needs_maintenance)
                         <span class="badge badge-success">Oui</span>
+                        @if($clientResponse->maintenance_type && count($clientResponse->maintenance_type) > 0)
+                            <div style="margin-top: 5px; font-size: 12px;">
+                                Types: {{ implode(', ', array_map('ucfirst', $clientResponse->maintenance_type)) }}
+                            </div>
+                        @endif
                     @else
                         <span class="badge badge-warning">Non</span>
                     @endif
                 </td>
             </tr>
+            <tr>
+                <th>Date de Création</th>
+                <td>{{ $clientResponse->created_at->format('d/m/Y à H:i') }}</td>
+            </tr>
+            @if($clientResponse->user)
+            <tr>
+                <th>Client</th>
+                <td>{{ $clientResponse->user->name }} ({{ $clientResponse->user->email }})</td>
+            </tr>
+            @endif
         </table>
     </div>
 
