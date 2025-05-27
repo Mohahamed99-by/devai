@@ -141,17 +141,17 @@
         @if($clientResponse->ai_analysis_summary)
         <div class="section">
             <h2>🤖 Analyse par Intelligence Artificielle</h2>
-            <p><strong>Résumé:</strong> {{ Str::limit($clientResponse->ai_analysis_summary, 300) }}</p>
+            <p><strong>Résumé:</strong> {{ Str::limit($clientResponse->ai_analysis_summary ?? 'Analyse en cours...', 300) }}</p>
 
             @if($clientResponse->ai_estimated_duration)
             <p><strong>⏱️ Durée estimée:</strong> {{ $clientResponse->ai_estimated_duration }}</p>
             @endif
 
             @if($clientResponse->ai_cost_estimate)
-            <p><strong>💰 Coût estimé:</strong> {{ $clientResponse->ai_cost_estimate }}</p>
+            <p><strong>💰 Coût estimé:</strong> {{ is_numeric($clientResponse->ai_cost_estimate) ? number_format($clientResponse->ai_cost_estimate, 0, ',', ' ') . ' EUR' : $clientResponse->ai_cost_estimate }}</p>
             @endif
 
-            @if(is_array($clientResponse->ai_complexity_factors) && count($clientResponse->ai_complexity_factors) > 0)
+            @if($clientResponse->ai_complexity_factors && is_array($clientResponse->ai_complexity_factors) && count($clientResponse->ai_complexity_factors) > 0)
             <p><strong>⚠️ Facteurs de complexité:</strong></p>
             <ul>
                 @foreach($clientResponse->ai_complexity_factors as $factor)

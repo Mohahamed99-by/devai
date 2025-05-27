@@ -47,8 +47,7 @@ class ClientResponse extends Model
         'ai_suggested_technologies' => 'array',
         'ai_detailed_analysis' => 'array',
         'ai_complexity_factors' => 'array',
-        'ai_recommendations' => 'array',
-        'ai_cost_estimate' => 'decimal:2'
+        'ai_recommendations' => 'array'
     ];
 
     /**

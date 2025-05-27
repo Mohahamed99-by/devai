@@ -1,12 +1,13 @@
 # Guide de correction pour le serveur AWS
 
 ## Problèmes identifiés :
-1. ❌ Table `client_responses` manquante (erreur principale)
-2. ❌ Migrations Laravel bloquées ou non exécutées
-3. ❌ Permissions sur les fichiers de log Laravel
-4. ❌ Tables de chat orphelines avec contraintes de clés étrangères
-5. ❌ Utilisateurs sans rôles assignés
-6. ❌ Erreurs dans la navbar dues aux rôles manquants
+1. ❌ Table `client_responses` manquante (erreur principale) - ✅ RÉSOLU
+2. ❌ Migrations Laravel bloquées ou non exécutées - ✅ RÉSOLU
+3. ❌ Permissions sur les fichiers de log Laravel - 🔧 SOLUTION CRÉÉE
+4. ❌ Erreur "Unable to cast value to a decimal" dans l'email - ✅ CORRIGÉ
+5. ❌ Tables de chat orphelines avec contraintes de clés étrangères
+6. ❌ Utilisateurs sans rôles assignés
+7. ❌ Erreurs dans la navbar dues aux rôles manquants
 
 ## SOLUTION URGENTE - Table client_responses manquante :
 
@@ -38,6 +39,23 @@ mysql -h database-1.ct4im4euq9dt.eu-north-1.rds.amazonaws.com -u admin -p devsai
 1. Ouvrir le fichier `database/manual_migration.sql`
 2. Copier tout le contenu
 3. L'exécuter dans phpMyAdmin ou votre client MySQL
+
+## SOLUTION URGENTE - Permissions et erreurs email :
+
+### 1. Correction des permissions (PRIORITÉ ABSOLUE)
+```bash
+# Copier et exécuter le script de permissions
+scp fix-permissions.sh ubuntu@ec2-13-49-243-57.eu-north-1.compute.amazonaws.com:/tmp/
+ssh ubuntu@ec2-13-49-243-57.eu-north-1.compute.amazonaws.com
+cd /var/www/html/devai
+bash /tmp/fix-permissions.sh
+```
+
+### 2. Test des emails corrigés
+```bash
+# Tester avec la nouvelle commande sécurisée
+php artisan email:test-safe
+```
 
 ## Solutions à appliquer sur le serveur AWS :
 
