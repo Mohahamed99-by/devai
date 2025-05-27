@@ -1,10 +1,43 @@
 # Guide de correction pour le serveur AWS
 
 ## Problèmes identifiés :
-1. ❌ Permissions sur les fichiers de log Laravel
-2. ❌ Tables de chat orphelines avec contraintes de clés étrangères
-3. ❌ Utilisateurs sans rôles assignés
-4. ❌ Erreurs dans la navbar dues aux rôles manquants
+1. ❌ Table `client_responses` manquante (erreur principale)
+2. ❌ Migrations Laravel bloquées ou non exécutées
+3. ❌ Permissions sur les fichiers de log Laravel
+4. ❌ Tables de chat orphelines avec contraintes de clés étrangères
+5. ❌ Utilisateurs sans rôles assignés
+6. ❌ Erreurs dans la navbar dues aux rôles manquants
+
+## SOLUTION URGENTE - Table client_responses manquante :
+
+### Option A : Migration automatique (recommandée)
+```bash
+# Se connecter au serveur AWS
+ssh ubuntu@ec2-13-49-243-57.eu-north-1.compute.amazonaws.com
+cd /var/www/html/devai
+
+# Diagnostic de la base de données
+php artisan db:diagnose --fix
+
+# Si ça ne fonctionne pas, forcer les migrations
+php artisan migrate:install --force
+php artisan migrate --force
+```
+
+### Option B : Migration manuelle (si Option A échoue)
+```bash
+# Copier le fichier SQL sur le serveur
+scp database/manual_migration.sql ubuntu@ec2-13-49-243-57.eu-north-1.compute.amazonaws.com:/tmp/
+
+# Se connecter au serveur et exécuter le SQL
+ssh ubuntu@ec2-13-49-243-57.eu-north-1.compute.amazonaws.com
+mysql -h database-1.ct4im4euq9dt.eu-north-1.rds.amazonaws.com -u admin -p devsai < /tmp/manual_migration.sql
+```
+
+### Option C : Via phpMyAdmin ou client MySQL
+1. Ouvrir le fichier `database/manual_migration.sql`
+2. Copier tout le contenu
+3. L'exécuter dans phpMyAdmin ou votre client MySQL
 
 ## Solutions à appliquer sur le serveur AWS :
 
