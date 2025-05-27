@@ -226,11 +226,11 @@
                 <div class="relative" x-data="{ open: false }">
                     <button @click="open = !open" class="flex items-center space-x-3 text-gray-700 hover:text-primary-600 focus:outline-none p-2 rounded-xl hover:bg-primary-50/80 transition-all duration-200 group">
                         <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg transform group-hover:scale-105 transition-all duration-200">
-                            {{ substr(Auth::user()->name, 0, 1) }}
+                            {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
                         </div>
                         <div class="hidden lg:block text-left">
-                            <div class="text-sm font-semibold text-gray-800">{{ Auth::user()->name }}</div>
-                            <div class="text-xs text-gray-500 font-medium">{{ Auth::user()->role->name }}</div>
+                            <div class="text-sm font-semibold text-gray-800">{{ Auth::user()->name ?? 'Utilisateur' }}</div>
+                            <div class="text-xs text-gray-500 font-medium">{{ Auth::user()->role->name ?? 'Utilisateur' }}</div>
                         </div>
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-primary-500 transition-colors duration-200 group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -249,12 +249,12 @@
                         <div class="px-6 py-4 border-b border-gray-200/50 bg-gradient-to-r from-primary-50 to-secondary-50">
                             <div class="flex items-center">
                                 <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg mr-4">
-                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                    {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
                                 </div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name }}</div>
-                                    <div class="text-xs text-gray-600 truncate">{{ Auth::user()->email }}</div>
-                                    <div class="text-xs text-primary-600 font-semibold mt-1">{{ Auth::user()->role->name }}</div>
+                                    <div class="text-sm font-bold text-gray-800 truncate">{{ Auth::user()->name ?? 'Utilisateur' }}</div>
+                                    <div class="text-xs text-gray-600 truncate">{{ Auth::user()->email ?? 'email@example.com' }}</div>
+                                    <div class="text-xs text-primary-600 font-semibold mt-1">{{ Auth::user()->role->name ?? 'Utilisateur' }}</div>
                                 </div>
                             </div>
                         </div>
