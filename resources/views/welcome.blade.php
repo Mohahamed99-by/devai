@@ -316,6 +316,87 @@
         </div>
     </section>
 
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-16 sm:py-24 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-20">
+                <div class="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-primary-100 text-primary-700 rounded-full text-xs sm:text-sm font-medium mb-3 sm:mb-4 animate-fade-in">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Tarification Simple
+                </div>
+                <h2 class="text-2xl sm:text-3xl md:text-5xl font-display font-bold mb-4 sm:mb-6 text-dark-900 animate-slide-up">
+                    Commencez <span class="text-primary-600">Gratuitement</span>
+                </h2>
+                <p class="text-base sm:text-lg text-dark-600 animate-slide-up" style="animation-delay: 100ms">
+                    Générez vos premières spécifications techniques sans engagement. Découvrez la puissance de l'IA pour vos projets.
+                </p>
+            </div>
+
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gradient-to-br from-primary-50 to-secondary-50 rounded-3xl p-8 sm:p-12 text-center border border-primary-100 shadow-soft animate-slide-up" style="animation-delay: 200ms">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary-100 text-primary-600 rounded-2xl mb-6 mx-auto">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl font-bold mb-4 text-dark-900">Accès Gratuit</h3>
+                    <p class="text-lg text-dark-600 mb-8 max-w-2xl mx-auto">
+                        Testez DevsAI sans limitation. Générez des spécifications techniques professionnelles pour tous vos projets.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 text-left">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-dark-700">Analyses illimitées</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-dark-700">Export PDF</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-dark-700">Support technique</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-dark-700">Historique des projets</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-dark-700">Mises à jour automatiques</span>
+                        </div>
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-primary-600 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="text-dark-700">Accès 24/7</span>
+                        </div>
+                    </div>
+
+                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-primary-600/25">
+                        <span>Commencer Gratuitement</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="container mx-auto px-4 py-12 sm:py-20 text-center">
         <div class="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-6 sm:p-8 md:p-12 text-white">
@@ -336,10 +417,15 @@
     // Smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                e.preventDefault();
+                targetElement.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
         });
     });
 
