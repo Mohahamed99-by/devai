@@ -52,10 +52,14 @@ class NewAnswerNotification extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $projectType = $this->clientResponse->project_type ?? 'Projet';
+
         return [
             'client_response_id' => $this->clientResponse->id,
-            'project_type' => $this->clientResponse->project_type,
-            'message' => 'Nouvelle réponse reçue pour le projet: ' . $this->clientResponse->project_type,
+            'project_type' => $projectType,
+            'title' => 'Nouvelle réponse reçue',
+            'message' => 'Nouvelle réponse reçue pour le projet: ' . $projectType,
+            'type' => 'new_answer',
             'created_at' => now()->toDateTimeString()
         ];
     }

@@ -58,10 +58,12 @@ class TechnicalSheetStatusChanged extends Notification
     {
         return [
             'client_response_id' => $this->clientResponse->id,
-            'project_type' => $this->clientResponse->project_type,
+            'project_type' => $this->clientResponse->project_type ?? 'Projet',
             'status' => $this->status,
             'message' => $this->message ?? $this->getDefaultMessage(),
             'title' => $this->getTitle(),
+            'type' => 'technical_sheet_status_changed',
+            'created_at' => now()->toDateTimeString(),
         ];
     }
 
