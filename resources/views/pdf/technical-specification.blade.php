@@ -52,7 +52,7 @@
             border-radius: 0 0 25px 25px;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
         }
 
         .header::before {
@@ -94,7 +94,7 @@
             display: inline-block;
             margin-top: 15px;
             font-weight: 600;
-            backdrop-filter: blur(10px);
+            /* backdrop-filter supprimé pour compatibilité PDF */
             border: 1px solid rgba(255,255,255,0.2);
             font-size: 18px;
             position: relative;
@@ -155,7 +155,7 @@
             color: white;
             font-weight: bold;
             font-size: 18px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
             flex-shrink: 0;
         }
 
@@ -253,10 +253,7 @@
             background-color: var(--gray-50);
         }
 
-        tr:hover {
-            background-color: var(--primary-lighter);
-            transition: background-color 0.2s ease;
-        }
+        /* Suppression des effets hover pour PDF */
 
         td {
             color: var(--gray-700);
@@ -330,7 +327,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(59,130,246,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(59, 130, 246, 0.03) 10px,
+                rgba(59, 130, 246, 0.03) 20px
+            );
             opacity: 0.5;
         }
 
@@ -364,7 +367,7 @@
             margin-left: 8px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
             border: 1px solid transparent;
         }
 
