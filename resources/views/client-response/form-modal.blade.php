@@ -6,98 +6,9 @@
 <style>
     .step-content {
         display: none;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.5s ease, transform 0.5s ease;
     }
     .step-content.active {
         display: block;
-        opacity: 1;
-        transform: translateY(0);
-    }
-    .form-progress-bar {
-        height: 8px;
-        background-color: #f3f4f6;
-        border-radius: 9999px;
-        overflow: hidden;
-        box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
-    }
-    .form-progress-bar-inner {
-        height: 100%;
-        background: linear-gradient(90deg, var(--tw-gradient-stops));
-        --tw-gradient-from: #4f46e5;
-        --tw-gradient-to: #a855f7;
-        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-        transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .card-gradient {
-        background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-        border: 1px solid #e5e7eb;
-        border-radius: 1rem;
-    }
-    .btn-gradient {
-        background: linear-gradient(90deg, var(--tw-gradient-stops));
-        --tw-gradient-from: #4f46e5;
-        --tw-gradient-to: #a855f7;
-        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2), 0 2px 4px -1px rgba(79, 70, 229, 0.1);
-    }
-    .btn-gradient:hover {
-        --tw-gradient-from: #4338ca;
-        --tw-gradient-to: #9333ea;
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.3), 0 4px 6px -2px rgba(79, 70, 229, 0.15);
-    }
-    .pulse-animation {
-        animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
-        }
-        70% {
-            box-shadow: 0 0 0 10px rgba(79, 70, 229, 0);
-        }
-        100% {
-            box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
-        }
-    }
-    .form-input {
-        transition: all 0.3s ease;
-        border-color: #e5e7eb;
-        border-radius: 0.75rem;
-    }
-    .form-input:focus {
-        border-color: #6366f1;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        transform: translateY(-1px);
-    }
-    .form-label {
-        font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-    .form-hint {
-        font-size: 0.75rem;
-        color: #6b7280;
-        margin-top: 0.25rem;
-    }
-    .checkbox-item {
-        transition: all 0.2s ease;
-    }
-    .checkbox-item:hover {
-        background-color: rgba(99, 102, 241, 0.05);
-        border-radius: 0.5rem;
-    }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in {
-        animation: fadeIn 0.5s ease forwards;
     }
 </style>
 @endpush
@@ -105,35 +16,35 @@
 @section('content')
 <div class="container mx-auto px-4 py-6 sm:py-8 md:py-12">
     <div class="max-w-4xl mx-auto">
-        <div class="bg-white rounded-2xl shadow-soft p-5 sm:p-6 md:p-8 mb-6 sm:mb-8 border border-gray-100 animate-fade-in">
+        <div class="bg-white rounded-2xl shadow-lg shadow-gray-200/50 p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 border border-gray-100 animate-fade-in">
             <div class="flex flex-col sm:flex-row sm:items-center mb-6 sm:mb-8">
                 <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl flex items-center justify-center mb-3 sm:mb-0 sm:mr-5 shadow-md mx-auto sm:mx-0 transform transition-transform duration-300 hover:scale-105">
                     <svg class="w-7 h-7 sm:w-8 sm:h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                 </div>
-                <div>
+                <div class="flex-1">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent text-center sm:text-left">Générateur de Fiche Technique</h1>
-                    <p class="text-dark-500 text-center sm:text-left mt-1 text-sm sm:text-base">Obtenez une analyse détaillée de votre projet en quelques minutes</p>
+                    <p class="text-gray-600 text-center sm:text-left mt-1 text-sm sm:text-base">Obtenez une analyse détaillée de votre projet en quelques minutes</p>
                 </div>
             </div>
 
-            <div class="card-gradient p-4 sm:p-5 md:p-7 mb-6 sm:mb-8 relative overflow-hidden">
+            <div class="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-xl p-4 sm:p-5 md:p-7 mb-6 sm:mb-8 relative overflow-hidden">
                 <!-- Decorative elements -->
-                <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                <div class="absolute top-0 right-0 w-32 sm:w-40 h-32 sm:h-40 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
 
-                <p class="text-dark-700 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base relative">Bienvenue dans notre outil d'analyse automatisée de projets. Ce questionnaire intelligent nous aidera à comprendre vos besoins.</p>
-                <p class="text-dark-700 leading-relaxed text-sm sm:text-base relative">Après soumission, notre <span class="font-semibold text-primary-600">IA</span> analysera vos exigences et générera une fiche technique détaillée incluant les fonctionnalités suggérées, les technologies recommandées et une estimation de délai de développement.</p>
+                <p class="text-gray-700 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base relative z-10">Bienvenue dans notre outil d'analyse automatisée de projets. Ce questionnaire intelligent nous aidera à comprendre vos besoins.</p>
+                <p class="text-gray-700 leading-relaxed text-sm sm:text-base relative z-10">Après soumission, notre <span class="font-semibold text-primary-600">IA</span> analysera vos exigences et générera une fiche technique détaillée incluant les fonctionnalités suggérées, les technologies recommandées et une estimation de délai de développement.</p>
             </div>
 
             <div class="flex flex-col items-center mt-6 sm:mt-8 md:mt-10">
-                <button type="button" onclick="openModal('project-form-modal')" class="btn-gradient text-white px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl flex items-center pulse-animation w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1">
+                <button type="button" onclick="openModal('project-form-modal')" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-6 sm:px-8 md:px-10 py-3 sm:py-4 rounded-xl flex items-center animate-pulse shadow-lg shadow-primary-500/25 w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 sm:h-6 sm:w-6 mr-2 sm:mr-3" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
                     </svg>
                     <span class="text-sm sm:text-base md:text-lg font-medium">Commencer le questionnaire</span>
                 </button>
-                <p class="text-xs sm:text-sm text-dark-500 mt-3 sm:mt-4 flex items-center">
+                <p class="text-xs sm:text-sm text-gray-500 mt-3 sm:mt-4 flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -145,36 +56,36 @@
 </div>
 
 <x-modal id="project-form-modal" maxWidth="5xl">
-    <div class="p-4 sm:p-6 md:p-8 lg:p-10 bg-gradient-to-br from-white to-gray-50 overflow-y-auto max-h-[90vh] md:max-h-screen relative">
+    <div class="p-3 sm:p-6 md:p-8 lg:p-10 bg-gradient-to-br from-white to-gray-50 overflow-y-auto max-h-[90vh] md:max-h-screen relative">
         <!-- Decorative elements - hidden on very small screens -->
-        <div class="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none hidden sm:block"></div>
-        <div class="absolute bottom-0 left-0 w-40 sm:w-64 h-40 sm:h-64 bg-gradient-to-tr from-secondary-500/5 to-accent-500/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none hidden sm:block"></div>
+        <div class="absolute top-0 right-0 w-32 sm:w-40 md:w-64 h-32 sm:h-40 md:h-64 bg-gradient-to-br from-primary-500/5 to-secondary-500/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none hidden sm:block"></div>
+        <div class="absolute bottom-0 left-0 w-32 sm:w-40 md:w-64 h-32 sm:h-40 md:h-64 bg-gradient-to-tr from-secondary-500/5 to-accent-500/5 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none hidden sm:block"></div>
 
-        <div class="relative">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8">
-                <div class="flex items-center mb-4 sm:mb-0 w-full sm:w-auto">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-md transform transition-transform duration-300 hover:scale-105">
+        <div class="relative z-10">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 md:mb-8">
+                <div class="flex items-center mb-3 sm:mb-0 w-full sm:w-auto">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-xl flex items-center justify-center mr-3 sm:mr-4 shadow-md transform transition-transform duration-300 hover:scale-105 flex-shrink-0">
                         <svg class="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                         </svg>
                     </div>
-                    <div class="flex-1">
-                        <h2 class="text-lg sm:text-xl md:text-2xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent">Questionnaire de Projet</h2>
-                        <p class="text-dark-500 text-xs sm:text-sm">Partagez les détails de votre projet pour obtenir une analyse personnalisée</p>
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-lg sm:text-xl md:text-2xl font-display font-bold bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent truncate">Questionnaire de Projet</h2>
+                        <p class="text-gray-500 text-xs sm:text-sm truncate">Partagez les détails de votre projet pour obtenir une analyse personnalisée</p>
                     </div>
                 </div>
-                <button type="button" onclick="closeModal('project-form-modal')" class="text-dark-400 hover:text-dark-600 transition-colors duration-200 p-2 rounded-xl hover:bg-dark-50 absolute top-2 right-2 sm:top-4 sm:right-4 md:static">
+                <button type="button" onclick="closeModal('project-form-modal')" class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-2 rounded-xl hover:bg-gray-50 absolute top-1 right-1 sm:top-2 sm:right-2 md:static z-20 flex-shrink-0">
                     <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
 
-            <div class="mb-6 sm:mb-8">
-                <div class="form-progress-bar">
-                    <div class="form-progress-bar-inner" id="progressBar" style="width: 20%"></div>
+            <div class="mb-4 sm:mb-6 md:mb-8">
+                <div class="h-2 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                    <div class="h-full bg-gradient-to-r from-primary-600 to-secondary-600 transition-all duration-700 ease-out shadow-sm" id="progressBar" style="width: 20%"></div>
                 </div>
-                <div class="flex justify-between text-xs text-dark-500 mt-2 px-1">
+                <div class="flex justify-between text-xs text-gray-500 mt-2 px-1">
                     <span class="text-[10px] sm:text-xs">Début</span>
                     <span class="text-[10px] sm:text-xs">Progression</span>
                     <span class="text-[10px] sm:text-xs">Fin</span>
@@ -185,25 +96,25 @@
                 <!-- Les étapes seront générées dynamiquement par JavaScript -->
             </div>
 
-        <form id="projectForm" class="mt-4 sm:mt-6 md:mt-8 bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-soft border border-gray-100">
+        <form id="projectForm" class="mt-3 sm:mt-6 md:mt-8 bg-white p-3 sm:p-6 md:p-8 rounded-2xl shadow-lg shadow-gray-200/50 border border-gray-100">
             @csrf
 
             <!-- Step 1: Informations de Base -->
             <div class="step-content active" data-step="1">
-                <div class="flex items-center mb-5 pb-3 border-b border-primary-100">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-xl flex items-center justify-center mr-3 text-primary-600 font-bold text-base sm:text-lg shadow-sm">1</div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-display font-semibold text-dark-800">Informations de Base</h3>
-                        <p class="text-dark-500 text-xs sm:text-sm">Commençons par les informations essentielles de votre projet</p>
+                <div class="flex items-center mb-4 sm:mb-5 pb-3 border-b border-primary-100">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-xl flex items-center justify-center mr-3 text-primary-600 font-bold text-sm sm:text-base md:text-lg shadow-sm flex-shrink-0">1</div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-base sm:text-lg md:text-xl font-display font-semibold text-gray-800 truncate">Informations de Base</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm truncate">Commençons par les informations essentielles de votre projet</p>
                     </div>
                 </div>
 
                 <!-- Project Type -->
-                <div class="mb-6 sm:mb-8">
-                    <label class="form-label text-sm sm:text-base">
+                <div class="mb-4 sm:mb-6 md:mb-8">
+                    <label class="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
                         Type de Projet <span class="text-primary-600">*</span>
                     </label>
-                    <select name="project_type" class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none" required>
+                    <select name="project_type" class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 hover:-translate-y-0.5 bg-white" required>
                         <option value="">Sélectionnez un type de projet</option>
                         <option value="web">Application Web</option>
                         <option value="mobile_ios">Application Mobile - iOS</option>
@@ -215,58 +126,58 @@
                         <option value="cms">Système de Gestion de Contenu</option>
                         <option value="api">API / Service Backend</option>
                     </select>
-                    <p class="form-hint">Sélectionnez la plateforme principale pour votre projet</p>
+                    <p class="text-xs text-gray-500 mt-1">Sélectionnez la plateforme principale pour votre projet</p>
                 </div>
 
                 <!-- Project Description -->
-                <div class="mb-6 sm:mb-8">
-                    <label class="form-label text-sm sm:text-base">
+                <div class="mb-4 sm:mb-6 md:mb-8">
+                    <label class="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
                         Description du Projet <span class="text-primary-600">*</span>
                     </label>
                     <div class="relative">
                         <textarea
                             name="project_description"
                             rows="4"
-                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 hover:-translate-y-0.5 bg-white resize-none"
                             placeholder="Décrivez votre projet en détail. Quel problème résout-il ? Quels sont les objectifs principaux ?"
                             required
                             onclick="event.stopPropagation();"
                             onfocus="this.readOnly = false;"
                             onkeydown="event.stopPropagation();"></textarea>
-                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-gray-400 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                             </svg>
                         </div>
                     </div>
-                    <p class="form-hint">Soyez aussi précis que possible sur l'objectif et les buts de votre projet</p>
+                    <p class="text-xs text-gray-500 mt-1">Soyez aussi précis que possible sur l'objectif et les buts de votre projet</p>
                 </div>
 
                 <!-- Similar Applications -->
-                <div class="mb-6 sm:mb-8">
-                    <label class="form-label text-sm sm:text-base">
+                <div class="mb-4 sm:mb-6 md:mb-8">
+                    <label class="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
                         Applications Similaires
                     </label>
                     <div class="relative">
                         <textarea
                             name="similar_applications"
                             rows="3"
-                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 hover:-translate-y-0.5 bg-white resize-none"
                             placeholder="Listez les applications ou sites web existants qui sont similaires à ce que vous souhaitez construire"
                             onclick="event.stopPropagation();"
                             onfocus="this.readOnly = false;"
                             onkeydown="event.stopPropagation();"></textarea>
-                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-gray-400 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                             </svg>
                         </div>
                     </div>
-                    <p class="form-hint">Des exemples nous aident à mieux comprendre votre vision</p>
+                    <p class="text-xs text-gray-500 mt-1">Des exemples nous aident à mieux comprendre votre vision</p>
                 </div>
 
-                <div class="flex justify-end mt-6 sm:mt-8">
-                    <button type="button" class="next-step btn-gradient text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-md w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1 text-sm sm:text-base">
+                <div class="flex justify-end mt-4 sm:mt-6 md:mt-8">
+                    <button type="button" class="next-step bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-lg shadow-primary-500/25 w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 text-sm sm:text-base">
                         <span class="mr-2 font-medium">Suivant</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -277,94 +188,94 @@
 
             <!-- Step 2: Public Cible -->
             <div class="step-content" data-step="2">
-                <div class="flex items-center mb-5 pb-3 border-b border-primary-100">
-                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-xl flex items-center justify-center mr-3 text-primary-600 font-bold text-base sm:text-lg shadow-sm">2</div>
-                    <div>
-                        <h3 class="text-lg sm:text-xl font-display font-semibold text-dark-800">Public Cible</h3>
-                        <p class="text-dark-500 text-xs sm:text-sm">Définissez qui utilisera votre application</p>
+                <div class="flex items-center mb-4 sm:mb-5 pb-3 border-b border-primary-100">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-xl flex items-center justify-center mr-3 text-primary-600 font-bold text-sm sm:text-base md:text-lg shadow-sm flex-shrink-0">2</div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-base sm:text-lg md:text-xl font-display font-semibold text-gray-800 truncate">Public Cible</h3>
+                        <p class="text-gray-500 text-xs sm:text-sm truncate">Définissez qui utilisera votre application</p>
                     </div>
                 </div>
 
                 <!-- Target Audience -->
-                <div class="mb-6 sm:mb-8">
-                    <label class="form-label text-sm sm:text-base">
+                <div class="mb-4 sm:mb-6 md:mb-8">
+                    <label class="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
                         Public Cible <span class="text-primary-600">*</span>
                     </label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 mt-2 sm:mt-3">
-                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
-                            <input type="checkbox" name="target_audience[]" value="clients" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
-                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Clients / Consommateurs</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 md:gap-4 mt-2 sm:mt-3">
+                        <div class="flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-all duration-200 border border-transparent hover:border-primary-200">
+                            <input type="checkbox" name="target_audience[]" value="clients" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md flex-shrink-0">
+                            <label class="ml-2 sm:ml-3 block text-gray-700 text-sm sm:text-base cursor-pointer">Clients / Consommateurs</label>
                         </div>
-                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
-                            <input type="checkbox" name="target_audience[]" value="businesses" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
-                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Entreprises (B2B)</label>
+                        <div class="flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-all duration-200 border border-transparent hover:border-primary-200">
+                            <input type="checkbox" name="target_audience[]" value="businesses" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md flex-shrink-0">
+                            <label class="ml-2 sm:ml-3 block text-gray-700 text-sm sm:text-base cursor-pointer">Entreprises (B2B)</label>
                         </div>
-                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
-                            <input type="checkbox" name="target_audience[]" value="internal" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
-                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Utilisateurs internes</label>
+                        <div class="flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-all duration-200 border border-transparent hover:border-primary-200">
+                            <input type="checkbox" name="target_audience[]" value="internal" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md flex-shrink-0">
+                            <label class="ml-2 sm:ml-3 block text-gray-700 text-sm sm:text-base cursor-pointer">Utilisateurs internes</label>
                         </div>
-                        <div class="checkbox-item flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-colors duration-200">
-                            <input type="checkbox" name="target_audience[]" value="technical" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md">
-                            <label class="ml-2 sm:ml-3 block text-dark-700 text-sm sm:text-base">Utilisateurs techniques</label>
+                        <div class="flex items-center p-2 sm:p-3 hover:bg-primary-50 rounded-xl transition-all duration-200 border border-transparent hover:border-primary-200">
+                            <input type="checkbox" name="target_audience[]" value="technical" class="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 focus:ring-primary-500 border-gray-300 rounded-md flex-shrink-0">
+                            <label class="ml-2 sm:ml-3 block text-gray-700 text-sm sm:text-base cursor-pointer">Utilisateurs techniques</label>
                         </div>
                     </div>
-                    <p class="form-hint">Sélectionnez tous les types d'utilisateurs qui utiliseront votre application</p>
+                    <p class="text-xs text-gray-500 mt-1">Sélectionnez tous les types d'utilisateurs qui utiliseront votre application</p>
                 </div>
 
                 <!-- User Demographics -->
-                <div class="mb-6 sm:mb-8">
-                    <label class="form-label text-sm sm:text-base">
+                <div class="mb-4 sm:mb-6 md:mb-8">
+                    <label class="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
                         Démographie des Utilisateurs
                     </label>
                     <div class="relative">
                         <textarea
                             name="user_demographics"
                             rows="3"
-                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 hover:-translate-y-0.5 bg-white resize-none"
                             placeholder="Décrivez les caractéristiques de vos utilisateurs (âge, profession, niveau technique, etc.)"
                             onclick="event.stopPropagation();"
                             onfocus="this.readOnly = false;"
                             onkeydown="event.stopPropagation();"></textarea>
-                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-gray-400 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                         </div>
                     </div>
-                    <p class="form-hint">Ces informations nous aident à adapter l'interface utilisateur</p>
+                    <p class="text-xs text-gray-500 mt-1">Ces informations nous aident à adapter l'interface utilisateur</p>
                 </div>
 
                 <!-- User Expectations -->
-                <div class="mb-6 sm:mb-8">
-                    <label class="form-label text-sm sm:text-base">
+                <div class="mb-4 sm:mb-6 md:mb-8">
+                    <label class="block text-sm sm:text-base font-semibold text-gray-700 mb-2">
                         Attentes des Utilisateurs
                     </label>
                     <div class="relative">
                         <textarea
                             name="user_expectations"
                             rows="3"
-                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border rounded-xl focus:outline-none"
+                            class="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 hover:-translate-y-0.5 bg-white resize-none"
                             placeholder="Quelles sont les principales attentes de vos utilisateurs ? Quels problèmes cherchent-ils à résoudre ?"
                             onclick="event.stopPropagation();"
                             onfocus="this.readOnly = false;"
                             onkeydown="event.stopPropagation();"></textarea>
-                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-dark-400">
+                        <div class="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 text-gray-400 pointer-events-none">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                             </svg>
                         </div>
                     </div>
-                    <p class="form-hint">Comprendre les attentes nous aide à prioriser les fonctionnalités</p>
+                    <p class="text-xs text-gray-500 mt-1">Comprendre les attentes nous aide à prioriser les fonctionnalités</p>
                 </div>
 
-                <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 mt-6 sm:mt-8">
-                    <button type="button" class="prev-step bg-white border border-dark-200 text-dark-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-dark-50 transition-all duration-200 flex items-center shadow-sm justify-center sm:justify-start order-2 sm:order-1 hover:-translate-y-1 text-sm sm:text-base">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-dark-500" viewBox="0 0 20 20" fill="currentColor">
+                <div class="flex flex-col sm:flex-row justify-between gap-3 sm:gap-4 mt-4 sm:mt-6 md:mt-8">
+                    <button type="button" class="prev-step bg-white border border-gray-200 text-gray-700 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-gray-50 transition-all duration-200 flex items-center shadow-sm justify-center sm:justify-start order-2 sm:order-1 hover:-translate-y-1 text-sm sm:text-base">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
                         </svg>
                         <span class="font-medium">Précédent</span>
                     </button>
-                    <button type="button" class="next-step btn-gradient text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-md justify-center sm:justify-start order-1 sm:order-2 transform transition-all duration-300 hover:-translate-y-1 text-sm sm:text-base">
+                    <button type="button" class="next-step bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-lg shadow-primary-500/25 justify-center sm:justify-start order-1 sm:order-2 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 text-sm sm:text-base">
                         <span class="mr-2 font-medium">Suivant</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
