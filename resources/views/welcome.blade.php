@@ -2,193 +2,28 @@
 
 @section('title', 'DevsAI - AI-Powered Technical Specification Generator')
 
+
+
 @push('styles')
 <style>
-    .gradient-text {
-        background-image: linear-gradient(135deg, #6366f1, #a855f7, #3b82f6);
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
-        background-size: 200% auto;
-        animation: gradientShift 3s ease-in-out infinite;
-    }
-
-    @keyframes gradientShift {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-    }
-
-    @keyframes float {
-        0%, 100% { transform: translateY(0px) rotate(0deg); }
-        33% { transform: translateY(-10px) rotate(1deg); }
-        66% { transform: translateY(5px) rotate(-1deg); }
-    }
-
-    @keyframes pulse-glow {
-        0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
-        50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.6), 0 0 60px rgba(217, 70, 239, 0.3); }
-    }
-
-    @keyframes matrix-rain {
-        0% { transform: translateY(-100vh); opacity: 0; }
-        10% { opacity: 1; }
-        90% { opacity: 1; }
-        100% { transform: translateY(100vh); opacity: 0; }
-    }
-
-    @keyframes neural-pulse {
-        0%, 100% { opacity: 0.3; transform: scale(1); }
-        50% { opacity: 0.8; transform: scale(1.1); }
-    }
-
-    .hero-bg {
-        background:
-            radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 80% 20%, rgba(217, 70, 239, 0.15) 0%, transparent 50%),
-            radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-            linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #1e293b 75%, #0f172a 100%);
-    }
-
-    .neural-network {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    .neural-node {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        background: rgba(99, 102, 241, 0.6);
-        border-radius: 50%;
-        animation: neural-pulse 2s ease-in-out infinite;
-    }
-
-    .neural-connection {
-        position: absolute;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
-        animation: neural-pulse 3s ease-in-out infinite;
-    }
-
-    .matrix-char {
-        position: absolute;
-        color: rgba(99, 102, 241, 0.4);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        animation: matrix-rain 8s linear infinite;
-    }
-
-    .glass-morphism {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .holographic-border {
-        position: relative;
-        overflow: hidden;
-    }
-
-    .holographic-border::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.4), transparent);
-        animation: holographic-sweep 3s ease-in-out infinite;
-    }
-
-    @keyframes holographic-sweep {
-        0% { left: -100%; }
-        50% { left: 100%; }
-        100% { left: 100%; }
-    }
-
-    .cyber-grid {
-        background-image:
-            linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
-        background-size: 50px 50px;
-        animation: grid-move 20s linear infinite;
-    }
-
     @keyframes grid-move {
         0% { transform: translate(0, 0); }
         100% { transform: translate(50px, 50px); }
     }
 
-    .floating-element {
-        animation: float 6s ease-in-out infinite;
+    .grid-animation {
+        animation: grid-move 20s linear infinite;
     }
 
-    .glow-effect {
-        animation: pulse-glow 2s ease-in-out infinite;
-    }
-
-    /* Responsive optimizations */
     @media (max-width: 640px) {
-        .hero-bg {
-            min-height: 100vh;
-        }
-
-        .neural-node {
-            width: 3px;
-            height: 3px;
-        }
-
-        .matrix-char {
-            font-size: 12px;
-        }
-
-        .floating-element {
-            animation-duration: 8s;
-        }
-
-        .cyber-grid {
-            background-size: 30px 30px;
+        .grid-animation {
+            background-size: 30px 30px !important;
         }
     }
 
     @media (max-width: 480px) {
-        .neural-node {
-            width: 2px;
-            height: 2px;
-        }
-
-        .matrix-char {
-            font-size: 10px;
-        }
-
-        .cyber-grid {
-            background-size: 25px 25px;
-        }
-    }
-
-    /* Tablet optimizations */
-    @media (min-width: 641px) and (max-width: 1024px) {
-        .floating-element {
-            animation-duration: 7s;
-        }
-    }
-
-    /* Large screen optimizations */
-    @media (min-width: 1920px) {
-        .neural-node {
-            width: 5px;
-            height: 5px;
-        }
-
-        .matrix-char {
-            font-size: 16px;
-        }
-
-        .cyber-grid {
-            background-size: 60px 60px;
+        .grid-animation {
+            background-size: 25px 25px !important;
         }
     }
 </style>
@@ -196,53 +31,53 @@
 
 @section('content')
     <!-- Hero Section -->
-    <section class="relative min-h-screen hero-bg overflow-hidden">
+    <section class="relative min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
         <!-- Cyber Grid Background -->
-        <div class="absolute inset-0 cyber-grid opacity-30"></div>
+        <div class="absolute inset-0 opacity-30 grid-animation" style="background-image: linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px); background-size: 50px 50px;"></div>
 
         <!-- Neural Network Animation -->
-        <div class="neural-network">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none" id="neural-network">
             <!-- Neural nodes will be generated by JavaScript -->
         </div>
 
         <!-- Matrix Rain Effect -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none" id="matrix-container">
             <!-- Matrix characters will be generated by JavaScript -->
         </div>
 
         <!-- Floating Geometric Elements -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
             <!-- Top Left Orb -->
-            <div class="absolute top-10 sm:top-20 left-5 sm:left-20 w-16 sm:w-24 md:w-32 h-16 sm:h-24 md:h-32 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-full filter blur-xl floating-element" style="animation-delay: 0s;"></div>
+            <div class="absolute top-10 sm:top-20 left-5 sm:left-20 w-16 sm:w-24 md:w-32 h-16 sm:h-24 md:h-32 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-full filter blur-xl animate-bounce" style="animation-duration: 6s; animation-delay: 0s;"></div>
 
             <!-- Top Right Orb -->
-            <div class="absolute top-20 sm:top-40 right-8 sm:right-16 md:right-32 w-12 sm:w-18 md:w-24 h-12 sm:h-18 md:h-24 bg-gradient-to-br from-accent-500/25 to-primary-500/25 rounded-full filter blur-lg floating-element" style="animation-delay: 2s;"></div>
+            <div class="absolute top-20 sm:top-40 right-8 sm:right-16 md:right-32 w-12 sm:w-18 md:w-24 h-12 sm:h-18 md:h-24 bg-gradient-to-br from-accent-500/25 to-primary-500/25 rounded-full filter blur-lg animate-pulse" style="animation-duration: 4s; animation-delay: 2s;"></div>
 
             <!-- Bottom Left Orb -->
-            <div class="absolute bottom-16 sm:bottom-32 left-10 sm:left-20 md:left-40 w-20 sm:w-32 md:w-40 h-20 sm:h-32 md:h-40 bg-gradient-to-br from-secondary-500/15 to-accent-500/15 rounded-full filter blur-2xl floating-element" style="animation-delay: 4s;"></div>
+            <div class="absolute bottom-16 sm:bottom-32 left-10 sm:left-20 md:left-40 w-20 sm:w-32 md:w-40 h-20 sm:h-32 md:h-40 bg-gradient-to-br from-secondary-500/15 to-accent-500/15 rounded-full filter blur-2xl animate-ping" style="animation-duration: 8s; animation-delay: 4s;"></div>
 
             <!-- Center Orb -->
-            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 sm:w-48 md:w-64 h-32 sm:h-48 md:h-64 bg-gradient-to-br from-primary-400/10 to-secondary-400/10 rounded-full filter blur-3xl floating-element" style="animation-delay: 1s;"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-32 sm:w-48 md:w-64 h-32 sm:h-48 md:h-64 bg-gradient-to-br from-primary-400/10 to-secondary-400/10 rounded-full filter blur-3xl animate-pulse" style="animation-duration: 5s; animation-delay: 1s;"></div>
 
             <!-- Floating Tech Icons -->
-            <div class="absolute top-1/4 left-1/4 floating-element hidden sm:block" style="animation-delay: 3s;">
-                <div class="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 glass-morphism rounded-xl flex items-center justify-center glow-effect">
+            <div class="absolute top-1/4 left-1/4 animate-bounce hidden sm:block" style="animation-duration: 7s; animation-delay: 3s;">
+                <div class="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
                     <svg class="w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-primary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </div>
             </div>
 
-            <div class="absolute top-3/4 right-1/4 floating-element hidden sm:block" style="animation-delay: 5s;">
-                <div class="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 glass-morphism rounded-xl flex items-center justify-center glow-effect">
+            <div class="absolute top-3/4 right-1/4 animate-pulse hidden sm:block" style="animation-duration: 6s; animation-delay: 5s;">
+                <div class="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl flex items-center justify-center shadow-lg shadow-secondary-500/20">
                     <svg class="w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-secondary-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                     </svg>
                 </div>
             </div>
 
-            <div class="absolute top-1/2 right-1/6 floating-element hidden md:block" style="animation-delay: 1.5s;">
-                <div class="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 glass-morphism rounded-xl flex items-center justify-center glow-effect">
+            <div class="absolute top-1/2 right-1/6 animate-bounce hidden md:block" style="animation-duration: 8s; animation-delay: 1.5s;">
+                <div class="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 bg-white/10 backdrop-blur-xl border border-white/20 rounded-xl flex items-center justify-center shadow-lg shadow-accent-500/20">
                     <svg class="w-4 sm:w-5 md:w-6 h-4 sm:h-5 md:h-6 text-accent-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
@@ -254,7 +89,7 @@
         <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-24 lg:py-32 relative z-10">
             <div class="max-w-7xl mx-auto text-center">
                 <!-- AI Status Badge -->
-                <div class="inline-flex items-center mb-4 sm:mb-6 md:mb-8 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 glass-morphism text-white text-xs sm:text-sm md:text-base font-medium rounded-full holographic-border animate-fade-in">
+                <div class="inline-flex items-center mb-4 sm:mb-6 md:mb-8 px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 bg-white/10 backdrop-blur-xl border border-white/20 text-white text-xs sm:text-sm md:text-base font-medium rounded-full relative overflow-hidden">
                     <div class="flex items-center mr-2 sm:mr-3">
                         <div class="w-2 sm:w-2.5 md:w-3 h-2 sm:h-2.5 md:h-3 bg-green-400 rounded-full animate-pulse mr-1.5 sm:mr-2"></div>
                         <div class="w-1.5 sm:w-2 md:w-2 h-1.5 sm:h-2 md:h-2 bg-primary-400 rounded-full animate-pulse mr-0.5 sm:mr-1" style="animation-delay: 0.2s;"></div>
@@ -266,23 +101,23 @@
                 </div>
 
                 <!-- Main Heading -->
-                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-display font-black mb-4 sm:mb-6 md:mb-8 text-white leading-tight tracking-tight animate-slide-up">
+                <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-display font-black mb-4 sm:mb-6 md:mb-8 text-white leading-tight tracking-tight">
                     <span class="block mb-1 sm:mb-2">Transformez vos</span>
-                    <span class="gradient-text block mb-1 sm:mb-2">Idées</span>
+                    <span class="block mb-1 sm:mb-2 bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent animate-pulse">Idées</span>
                     <span class="block mb-1 sm:mb-2">en Spécifications</span>
-                    <span class="gradient-text">Techniques Précises</span>
+                    <span class="bg-gradient-to-r from-primary-400 via-secondary-400 to-primary-400 bg-clip-text text-transparent animate-pulse">Techniques Précises</span>
                 </h1>
 
                 <!-- Subtitle -->
-                <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 md:mb-12 text-gray-300 max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto leading-relaxed px-2 sm:px-0 animate-slide-up" style="animation-delay: 100ms">
+                <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 md:mb-12 text-gray-300 max-w-xs sm:max-w-2xl md:max-w-3xl lg:max-w-4xl mx-auto leading-relaxed px-2 sm:px-0">
                     Exploitez la puissance des <span class="text-primary-400 font-semibold">réseaux de neurones IA avancés</span> pour analyser vos exigences de projet et générer des
                     <span class="text-secondary-400 font-semibold">spécifications techniques complètes et professionnelles</span> en quelques minutes.
                 </p>
 
                 <!-- CTA Buttons -->
-                <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-10 md:mb-12 animate-slide-up px-4 sm:px-0" style="animation-delay: 200ms">
-                    <a href="{{ route('client-response.form') }}" class="group relative overflow-hidden px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-gradient-to-r from-primary-600 via-primary-700 to-secondary-600 text-white font-bold rounded-xl sm:rounded-2xl transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300 shadow-xl sm:shadow-2xl hover:shadow-primary-500/50 holographic-border">
-                        <div class="relative z-10 flex items-center justify-center">
+                <div class="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 md:gap-6 mb-8 sm:mb-10 md:mb-12 px-4 sm:px-0">
+                    <a href="{{ route('client-response.form') }}" class="group relative overflow-hidden px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-gradient-to-r from-primary-600 via-primary-700 to-secondary-600 text-white font-bold rounded-xl sm:rounded-2xl transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300 shadow-xl sm:shadow-2xl hover:shadow-primary-500/50 border border-white/20">
+                        <div class="flex items-center justify-center">
                             <svg class="w-4 sm:w-5 h-4 sm:h-5 mr-2 sm:mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                             </svg>
@@ -293,7 +128,7 @@
                         </div>
                     </a>
 
-                    <a href="#how-it-works" class="group px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 glass-morphism text-white font-semibold rounded-xl sm:rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/30 hover:border-primary-400/50">
+                    <a href="#how-it-works" class="group px-6 sm:px-8 md:px-10 py-3 sm:py-4 md:py-5 bg-white/10 backdrop-blur-xl text-white font-semibold rounded-xl sm:rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/30 hover:border-primary-400/50">
                         <div class="flex items-center justify-center">
                             <svg class="w-4 sm:w-5 h-4 sm:h-5 mr-2 sm:mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -307,20 +142,20 @@
                 </div>
 
                 <!-- Tech Stack Preview -->
-                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto animate-slide-up px-4 sm:px-0" style="animation-delay: 300ms">
-                    <div class="glass-morphism rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 max-w-xs sm:max-w-lg md:max-w-2xl mx-auto px-4 sm:px-0">
+                    <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
                         <div class="text-xl sm:text-2xl mb-1 sm:mb-2">🧠</div>
                         <div class="text-white/80 text-xs sm:text-sm font-medium group-hover:text-white">IA Neuronale</div>
                     </div>
-                    <div class="glass-morphism rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
+                    <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
                         <div class="text-xl sm:text-2xl mb-1 sm:mb-2">⚡</div>
                         <div class="text-white/80 text-xs sm:text-sm font-medium group-hover:text-white">Ultra Rapide</div>
                     </div>
-                    <div class="glass-morphism rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
+                    <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
                         <div class="text-xl sm:text-2xl mb-1 sm:mb-2">🎯</div>
                         <div class="text-white/80 text-xs sm:text-sm font-medium group-hover:text-white">Précision</div>
                     </div>
-                    <div class="glass-morphism rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
+                    <div class="bg-white/10 backdrop-blur-xl border border-white/20 rounded-lg sm:rounded-xl p-3 sm:p-4 text-center hover:bg-white/20 transition-all duration-300 group">
                         <div class="text-xl sm:text-2xl mb-1 sm:mb-2">🚀</div>
                         <div class="text-white/80 text-xs sm:text-sm font-medium group-hover:text-white">Innovation</div>
                     </div>
