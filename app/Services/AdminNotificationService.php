@@ -89,17 +89,27 @@ class AdminNotificationService
                 return false;
             }
 
-            // Obtenir les informations de l'utilisateur
-            $userName = $clientResponse->user ? $clientResponse->user->name : $userName;
-            $userEmail = $clientResponse->user ? $clientResponse->user->email : 'no-reply@devsai.com';
+            // Obtenir les informations de l'utilisateur avec validation
+            $userName = $clientResponse->user && !empty($clientResponse->user->name)
+                ? $clientResponse->user->name
+                : ($userName ?: 'Utilisateur anonyme');
+            $userEmail = $clientResponse->user && !empty($clientResponse->user->email)
+                ? $clientResponse->user->email
+                : 'no-reply@devsai.com';
 
-            // Préparer le contenu de l'email
-            $subject = 'Nouvelle activité sur DevsAI - ' . $userName;
+            // Préparer le contenu de l'email avec validation
+            $projectName = !empty($clientResponse->project_name)
+                ? $clientResponse->project_name
+                : 'Projet #' . $clientResponse->id;
+            $subject = 'Nouvelle soumission DevsAI - ' . $userName . ' (' . $projectName . ')';
+
+            // Valider les données avant de générer l'email
+            $this->validateClientResponseData($clientResponse);
 
             // Générer le contenu HTML de l'email unifié
             $emailContent = view('emails.unified-notification', [
                 'clientResponse' => $clientResponse,
-                'admin' => ['name' => $this->replyToName],
+                'admin' => ['name' => $this->replyToName, 'email' => $this->adminEmail],
                 'userName' => $userName
             ])->render();
 
@@ -265,6 +275,51 @@ class AdminNotificationService
 
         // Retourner un message d'erreur au cas où cette méthode serait appelée
         return 'Cette méthode est obsolète. Utilisez sendUnifiedNotification à la place.';
+    }
+
+    /**
+     * Valider les données du ClientResponse pour éviter les erreurs dans l'email
+     */
+    private function validateClientResponseData($clientResponse): void
+    {
+        // S'assurer que les arrays sont bien des arrays
+        if (isset($clientResponse->target_audience) && !is_array($clientResponse->target_audience)) {
+            $clientResponse->target_audience = is_string($clientResponse->target_audience)
+                ? [$clientResponse->target_audience]
+                : [];
+        }
+
+        if (isset($clientResponse->key_features) && !is_array($clientResponse->key_features)) {
+            $clientResponse->key_features = is_string($clientResponse->key_features)
+                ? [$clientResponse->key_features]
+                : [];
+        }
+
+        if (isset($clientResponse->ai_suggested_technologies) && !is_array($clientResponse->ai_suggested_technologies)) {
+            $clientResponse->ai_suggested_technologies = is_string($clientResponse->ai_suggested_technologies)
+                ? [$clientResponse->ai_suggested_technologies]
+                : [];
+        }
+
+        if (isset($clientResponse->ai_complexity_factors) && !is_array($clientResponse->ai_complexity_factors)) {
+            $clientResponse->ai_complexity_factors = is_string($clientResponse->ai_complexity_factors)
+                ? [$clientResponse->ai_complexity_factors]
+                : [];
+        }
+
+        if (isset($clientResponse->ai_suggested_features) && !is_array($clientResponse->ai_suggested_features)) {
+            $clientResponse->ai_suggested_features = is_string($clientResponse->ai_suggested_features)
+                ? [$clientResponse->ai_suggested_features]
+                : [];
+        }
+
+        // S'assurer que les champs texte ne sont pas null
+        $textFields = ['project_name', 'project_description', 'ai_analysis_summary', 'ai_estimated_duration'];
+        foreach ($textFields as $field) {
+            if (isset($clientResponse->$field) && is_null($clientResponse->$field)) {
+                $clientResponse->$field = '';
+            }
+        }
     }
 
     /**

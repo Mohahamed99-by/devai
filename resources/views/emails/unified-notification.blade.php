@@ -82,9 +82,25 @@
             color: #4a6cf7;
             font-weight: bold;
         }
+        .status-badge {
+            background-color: #10b981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
         .divider {
             border-top: 1px solid #ddd;
             margin: 20px 0;
+        }
+        .section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .section li {
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -96,10 +112,10 @@
         </div>
 
         <div class="content">
-            <p style="font-size: 16px; margin-bottom: 20px;">Bonjour {{ $admin['name'] }},</p>
+            <p style="font-size: 16px; margin-bottom: 20px;">Bonjour {{ $admin['name'] ?? 'Admin' }},</p>
 
             <p style="font-size: 16px; margin-bottom: 25px;">
-                Un utilisateur <span class="highlight">{{ $userName }}</span> vient de soumettre un nouveau projet sur DevsAI.
+                Un utilisateur <span class="highlight">{{ $userName ?? 'Utilisateur anonyme' }}</span> vient de soumettre un nouveau projet sur DevsAI.
                 <span class="status-badge">Nouveau</span>
             </p>
 
@@ -116,56 +132,104 @@
 
         <div class="section">
             <h2>📋 Détails du Projet</h2>
-            @if($clientResponse->project_name)
+            <p><strong>ID Projet:</strong> #{{ $clientResponse->id }}</p>
+            @if(!empty($clientResponse->project_name))
             <p><strong>Nom du projet:</strong> {{ $clientResponse->project_name }}</p>
             @endif
+            @if(!empty($clientResponse->project_type))
             <p><strong>Type de projet:</strong> {{ ucfirst(str_replace('_', ' ', $clientResponse->project_type)) }}</p>
-            @if($clientResponse->project_description)
+            @endif
+            @if(!empty($clientResponse->project_description))
             <p><strong>Description:</strong> {{ Str::limit($clientResponse->project_description, 200) }}</p>
             @endif
-            @if($clientResponse->target_audience)
-            <p><strong>Public cible:</strong> {{ $clientResponse->target_audience }}</p>
+            @if(!empty($clientResponse->target_audience))
+            <p><strong>Public cible:</strong>
+                @if(is_array($clientResponse->target_audience))
+                    {{ implode(', ', array_map('ucfirst', $clientResponse->target_audience)) }}
+                @else
+                    {{ $clientResponse->target_audience }}
+                @endif
+            </p>
             @endif
-            @if($clientResponse->main_features)
-            <p><strong>Fonctionnalités principales:</strong> {{ Str::limit($clientResponse->main_features, 150) }}</p>
+            @if(!empty($clientResponse->key_features))
+            <p><strong>Fonctionnalités principales:</strong>
+                @if(is_array($clientResponse->key_features))
+                    {{ implode(', ', $clientResponse->key_features) }}
+                @else
+                    {{ Str::limit($clientResponse->key_features, 150) }}
+                @endif
+            </p>
             @endif
-            @if($clientResponse->budget_range)
+            @if(!empty($clientResponse->budget_range))
             <p><strong>Budget:</strong> {{ $clientResponse->budget_range }}</p>
             @endif
-            @if($clientResponse->timeline)
+            @if(!empty($clientResponse->timeline))
             <p><strong>Délai:</strong> {{ $clientResponse->timeline }}</p>
             @endif
             <p><strong>Date de soumission:</strong> {{ $clientResponse->created_at ? $clientResponse->created_at->format('d/m/Y à H:i') : now()->format('d/m/Y à H:i') }}</p>
         </div>
 
-        @if($clientResponse->ai_analysis_summary)
         <div class="section">
             <h2>🤖 Analyse par Intelligence Artificielle</h2>
-            <p><strong>Résumé:</strong> {{ Str::limit($clientResponse->ai_analysis_summary ?? 'Analyse en cours...', 300) }}</p>
-
-            @if($clientResponse->ai_estimated_duration)
-            <p><strong>⏱️ Durée estimée:</strong> {{ $clientResponse->ai_estimated_duration }}</p>
+            @if(!empty($clientResponse->ai_analysis_summary))
+                <p><strong>Résumé:</strong> {{ Str::limit($clientResponse->ai_analysis_summary, 300) }}</p>
+            @else
+                <p><em>L'analyse IA est en cours de traitement. Elle sera disponible sous peu sur la plateforme.</em></p>
             @endif
 
-            @if($clientResponse->ai_cost_estimate)
-            <p><strong>💰 Coût estimé:</strong> {{ is_numeric($clientResponse->ai_cost_estimate) ? number_format($clientResponse->ai_cost_estimate, 0, ',', ' ') . ' EUR' : $clientResponse->ai_cost_estimate }}</p>
+            @if(!empty($clientResponse->ai_estimated_duration))
+                <p><strong>⏱️ Durée estimée:</strong> {{ $clientResponse->ai_estimated_duration }}</p>
             @endif
 
-            @if($clientResponse->ai_complexity_factors && is_array($clientResponse->ai_complexity_factors) && count($clientResponse->ai_complexity_factors) > 0)
-            <p><strong>⚠️ Facteurs de complexité:</strong></p>
-            <ul>
-                @foreach($clientResponse->ai_complexity_factors as $factor)
-                <li>{{ $factor }}</li>
-                @endforeach
-            </ul>
+            @if(!empty($clientResponse->ai_cost_estimate))
+                <p><strong>💰 Coût estimé:</strong>
+                    @if(is_numeric($clientResponse->ai_cost_estimate))
+                        {{ number_format($clientResponse->ai_cost_estimate, 0, ',', ' ') }} EUR
+                    @else
+                        {{ $clientResponse->ai_cost_estimate }}
+                    @endif
+                </p>
+            @endif
+
+            @if(!empty($clientResponse->ai_suggested_technologies) && is_array($clientResponse->ai_suggested_technologies) && count($clientResponse->ai_suggested_technologies) > 0)
+                <p><strong>💻 Technologies suggérées:</strong></p>
+                <ul>
+                    @foreach($clientResponse->ai_suggested_technologies as $tech)
+                        <li>{{ is_string($tech) ? $tech : 'Technologie non spécifiée' }}</li>
+                    @endforeach
+                </ul>
+            @endif
+
+            @if(!empty($clientResponse->ai_complexity_factors) && is_array($clientResponse->ai_complexity_factors) && count($clientResponse->ai_complexity_factors) > 0)
+                <p><strong>⚠️ Facteurs de complexité:</strong></p>
+                <ul>
+                    @foreach($clientResponse->ai_complexity_factors as $factor)
+                        <li>{{ is_string($factor) ? $factor : 'Facteur non spécifié' }}</li>
+                    @endforeach
+                </ul>
+            @endif
+
+            @if(!empty($clientResponse->ai_suggested_features) && is_array($clientResponse->ai_suggested_features) && count($clientResponse->ai_suggested_features) > 0)
+                <p><strong>✨ Fonctionnalités suggérées:</strong></p>
+                <ul>
+                    @foreach(array_slice($clientResponse->ai_suggested_features, 0, 5) as $feature)
+                        <li>
+                            @if(is_array($feature) && isset($feature['name']))
+                                {{ $feature['name'] }}
+                                @if(isset($feature['priority']))
+                                    <span style="font-size: 11px; background-color: #e5e7eb; padding: 2px 6px; border-radius: 8px; margin-left: 5px;">{{ $feature['priority'] }}</span>
+                                @endif
+                            @else
+                                {{ is_string($feature) ? $feature : 'Fonctionnalité non spécifiée' }}
+                            @endif
+                        </li>
+                    @endforeach
+                    @if(count($clientResponse->ai_suggested_features) > 5)
+                        <li><em>... et {{ count($clientResponse->ai_suggested_features) - 5 }} autres fonctionnalités</em></li>
+                    @endif
+                </ul>
             @endif
         </div>
-        @else
-        <div class="section">
-            <h2>🤖 Analyse par Intelligence Artificielle</h2>
-            <p><em>L'analyse IA est en cours de traitement. Elle sera disponible sous peu sur la plateforme.</em></p>
-        </div>
-        @endif
 
         <div class="divider"></div>
 
@@ -178,18 +242,18 @@
             </p>
         </div>
 
-        <div style="text-align: center; margin-top: 25px;">
-            <a href="{{ url('/client-response/' . $clientResponse->id) }}" class="btn" style="background-color: #4a6cf7; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: 600;">
-                📋 Voir les détails complets
-            </a>
+            <div style="text-align: center; margin-top: 25px;">
+                <a href="{{ url('/client-response/' . $clientResponse->id) }}" class="btn" style="background-color: #4a6cf7; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: 600; display: inline-block;">
+                    📋 Voir les détails complets
+                </a>
 
-            @if($clientResponse->user && $clientResponse->user->email)
-            <a href="mailto:{{ $clientResponse->user->email }}?subject=Re: Votre projet {{ $clientResponse->project_name ?? 'sur DevsAI' }}" class="btn" style="background-color: #34D399; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: 600; margin-left: 10px;">
-                ✉️ Répondre directement
-            </a>
-            @endif
+                @if($clientResponse->user && $clientResponse->user->email)
+                <a href="mailto:{{ $clientResponse->user->email }}?subject=Re: Votre projet {{ $clientResponse->project_name ?? 'sur DevsAI' }}" class="btn" style="background-color: #34D399; color: white; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: 600; margin-left: 10px; display: inline-block;">
+                    ✉️ Répondre directement
+                </a>
+                @endif
+            </div>
         </div>
-    </div>
 
         <div class="footer">
             <p>© {{ date('Y') }} DevsAI. Tous droits réservés.</p>
