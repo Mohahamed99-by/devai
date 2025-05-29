@@ -1,6 +1,6 @@
 @extends('layouts.app', ['showFooter' => true])
 
-@section('title', 'DevsAI - AI-Powered Technical Specification Generator')
+@section('title', 'DevsAI - Générateur de Spécifications Techniques Alimenté par l\'IA')
 
 
 
@@ -183,7 +183,7 @@
                         </svg>
                     </div>
                     <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-primary-600">1,000+</div>
-                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Projects Analyzed</div>
+                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Projets Analysés</div>
                 </div>
             </div>
 
@@ -196,7 +196,7 @@
                         </svg>
                     </div>
                     <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-primary-600">99%</div>
-                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Satisfaction Rate</div>
+                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Taux de Satisfaction</div>
                 </div>
             </div>
 
@@ -209,7 +209,7 @@
                         </svg>
                     </div>
                     <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-primary-600">10<span class="text-xl sm:text-2xl">min</span></div>
-                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Fast Analysis</div>
+                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Analyse Rapide</div>
                 </div>
             </div>
 
@@ -222,7 +222,7 @@
                         </svg>
                     </div>
                     <div class="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-primary-600">24/7</div>
-                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Always Available</div>
+                    <div class="text-dark-600 mt-2 sm:mt-3 font-medium text-sm sm:text-base">Toujours Disponible</div>
                 </div>
             </div>
         </div>
@@ -235,10 +235,10 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                How It Works
+                Comment ça marche
             </div>
-            <h2 class="text-2xl sm:text-3xl md:text-5xl font-display font-bold mb-4 sm:mb-6 text-dark-900 animate-slide-up">From Vision to Victory in <span class="text-primary-600">3 Simple Steps</span></h2>
-            <p class="text-base sm:text-lg text-dark-600 animate-slide-up" style="animation-delay: 100ms">Our intuitive AI-driven process delivers professional technical specifications, empowering you to kickstart your projects with confidence and precision.</p>
+            <h2 class="text-2xl sm:text-3xl md:text-5xl font-display font-bold mb-4 sm:mb-6 text-dark-900 animate-slide-up">De la Vision à la Victoire en <span class="text-primary-600">3 Étapes Simples</span></h2>
+            <p class="text-base sm:text-lg text-dark-600 animate-slide-up" style="animation-delay: 100ms">Notre processus intuitif alimenté par l'IA fournit des spécifications techniques professionnelles, vous permettant de lancer vos projets avec confiance et précision.</p>
         </div>
 
         <div class="relative">
@@ -258,8 +258,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-primary-700 group-hover:text-primary-600 transition-colors duration-300">Define Your Vision</h3>
-                    <p class="text-dark-600 text-sm sm:text-base">Submit your project goals and requirements through our guided, user-friendly questionnaire designed to capture all essential details.</p>
+                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-primary-700 group-hover:text-primary-600 transition-colors duration-300">Définissez Votre Vision</h3>
+                    <p class="text-dark-600 text-sm sm:text-base">Soumettez vos objectifs et exigences de projet via notre questionnaire guidé et convivial conçu pour capturer tous les détails essentiels.</p>
                 </div>
 
                 <div class="group relative bg-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-soft hover:shadow-soft-xl transform hover:-translate-y-2 transition-all duration-300 border border-dark-100/10 animate-slide-up" style="animation-delay: 300ms">
@@ -274,8 +274,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-secondary-700 group-hover:text-secondary-600 transition-colors duration-300">AI-Powered Analysis</h3>
-                    <p class="text-dark-600 text-sm sm:text-base">Our advanced AI processes your input, recommending optimal technologies and structuring your specifications with industry best practices.</p>
+                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-secondary-700 group-hover:text-secondary-600 transition-colors duration-300">Analyse Alimentée par l'IA</h3>
+                    <p class="text-dark-600 text-sm sm:text-base">Notre IA avancée traite vos données, recommande les technologies optimales et structure vos spécifications selon les meilleures pratiques de l'industrie.</p>
                 </div>
 
                 <div class="group relative bg-white p-6 sm:p-8 md:p-10 rounded-3xl shadow-soft hover:shadow-soft-xl transform hover:-translate-y-2 transition-all duration-300 border border-dark-100/10 animate-slide-up" style="animation-delay: 400ms">
@@ -290,8 +290,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                     </div>
-                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-accent-700 group-hover:text-accent-600 transition-colors duration-300">Receive Your Specs</h3>
-                    <p class="text-dark-600 text-sm sm:text-base">Download a polished, professional document with tech stack, architecture, features, and accurate time and cost estimates.</p>
+                    <h3 class="text-lg sm:text-xl font-bold mb-2 sm:mb-4 text-accent-700 group-hover:text-accent-600 transition-colors duration-300">Recevez Vos Spécifications</h3>
+                    <p class="text-dark-600 text-sm sm:text-base">Téléchargez un document professionnel et soigné avec la pile technologique, l'architecture, les fonctionnalités et des estimations précises de temps et de coût.</p>
                 </div>
             </div>
         </div>
@@ -306,10 +306,10 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Why DevsAI?
+                        Pourquoi DevsAI ?
                     </div>
                     <h2 class="text-3xl md:text-5xl font-display font-bold mb-8 text-dark-900 animate-slide-up">
-                        Elevate Your Projects with <span class="text-primary-600">AI-Driven Precision</span>
+                        Élevez Vos Projets avec <span class="text-primary-600">la Précision de l'IA</span>
                     </h2>
 
                     <div class="space-y-6">
@@ -322,8 +322,8 @@
                                 </div>
                             </div>
                             <div class="ml-5">
-                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-primary-700 transition-colors duration-300">Save Weeks of Work</h3>
-                                <p class="text-dark-600">Generate comprehensive specifications in minutes, not days, streamlining your project planning and accelerating development.</p>
+                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-primary-700 transition-colors duration-300">Économisez des Semaines de Travail</h3>
+                                <p class="text-dark-600">Générez des spécifications complètes en minutes, pas en jours, rationalisant votre planification de projet et accélérant le développement.</p>
                             </div>
                         </div>
 
@@ -336,8 +336,8 @@
                                 </div>
                             </div>
                             <div class="ml-5">
-                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-secondary-700 transition-colors duration-300">Unmatched Accuracy</h3>
-                                <p class="text-dark-600">Leverage AI trained on industry best practices for reliable, up-to-date recommendations that align with current technology trends.</p>
+                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-secondary-700 transition-colors duration-300">Précision Inégalée</h3>
+                                <p class="text-dark-600">Exploitez l'IA formée sur les meilleures pratiques de l'industrie pour des recommandations fiables et à jour qui s'alignent sur les tendances technologiques actuelles.</p>
                             </div>
                         </div>
 
@@ -350,8 +350,8 @@
                                 </div>
                             </div>
                             <div class="ml-5">
-                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-accent-700 transition-colors duration-300">Realistic Budgeting</h3>
-                                <p class="text-dark-600">Get precise cost and timeline estimates to plan your projects with confidence and avoid unexpected overruns.</p>
+                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-accent-700 transition-colors duration-300">Budget Réaliste</h3>
+                                <p class="text-dark-600">Obtenez des estimations précises de coût et de délai pour planifier vos projets avec confiance et éviter les dépassements inattendus.</p>
                             </div>
                         </div>
 
@@ -364,8 +364,8 @@
                                 </div>
                             </div>
                             <div class="ml-5">
-                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-primary-700 transition-colors duration-300">Professional Standards</h3>
-                                <p class="text-dark-600">Receive consistent, polished documentation ready for stakeholders and developers to implement with clarity.</p>
+                                <h3 class="text-xl font-bold mb-2 text-dark-900 group-hover:text-primary-700 transition-colors duration-300">Standards Professionnels</h3>
+                                <p class="text-dark-600">Recevez une documentation cohérente et soignée prête pour les parties prenantes et les développeurs à implémenter avec clarté.</p>
                             </div>
                         </div>
                     </div>
@@ -396,9 +396,9 @@
                                         <div class="p-6 text-white">
                                             <div class="flex items-center space-x-2 mb-2">
                                                 <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
-                                                <span class="text-sm font-medium">AI Analysis in Progress</span>
+                                                <span class="text-sm font-medium">Analyse IA en Cours</span>
                                             </div>
-                                            <h4 class="text-xl font-bold">Technical Specification Generator</h4>
+                                            <h4 class="text-xl font-bold">Générateur de Spécifications Techniques</h4>
                                         </div>
                                     </div>
                                 </div>
@@ -493,7 +493,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-primary-600/25">
+                    <a href="{{ route('client-response.form') }}" class="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-xl hover:from-primary-700 hover:to-primary-800 transform hover:-translate-y-1 transition-all duration-300 shadow-lg shadow-primary-600/25">
                         <span>Commencer Gratuitement</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -504,18 +504,7 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="container mx-auto px-4 py-12 sm:py-20 text-center">
-        <div class="max-w-4xl mx-auto bg-gradient-to-br from-blue-600 to-purple-700 rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-6 sm:p-8 md:p-12 text-white">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-6">Launch Your Next Big Idea with Precision Specs</h2>
-            <p class="text-base sm:text-lg text-blue-100 mb-6 sm:mb-10 max-w-2xl mx-auto">Don’t let technical complexity slow you down. Try DevsAI today and unlock professional-grade specifications for free.</p>
-            <a href="{{ route('client-response.form') }}" class="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300 shadow-lg">
-                Get Started Now
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 ml-1.5 sm:ml-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-            </a>
-        </div>
+  
     </section>
 @endsection
 
