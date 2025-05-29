@@ -227,7 +227,7 @@
                 </div>
 
                 <div class="flex justify-end mt-4 sm:mt-6 md:mt-8">
-                    <button type="button" class="next-step bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-lg shadow-primary-500/25 w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 text-sm sm:text-base">
+                    <button type="button" class="next-step bg-gradient-to-r  from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-lg shadow-primary-500/25 w-full sm:w-auto justify-center transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 text-sm sm:text-base">
                         <span class="mr-2 font-medium">Suivant</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
@@ -325,7 +325,7 @@
                         </svg>
                         <span class="font-medium">Précédent</span>
                     </button>
-                    <button type="button" class="next-step bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-lg shadow-blue-500/25 justify-center sm:justify-start order-1 sm:order-2 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/30 text-sm sm:text-base">
+                    <button type="button" class="next-step bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl flex items-center shadow-lg shadow-primary-500/25 justify-center sm:justify-start order-1 sm:order-2 transform transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary-500/30 text-sm sm:text-base">
                         <span class="mr-2 font-medium">Suivant</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
